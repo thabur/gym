@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#121417">
+    <title>Gym Cockpit</title>
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="apple-touch-icon" href="./icon.svg">
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="topbar">
+        <div>
+          <p class="eyebrow">4-week block</p>
+          <h1>Gym Cockpit</h1>
+        </div>
+        <div class="session-clock" aria-label="Session elapsed time">
+          <span id="elapsedTime">00:00</span>
+          <small>elapsed</small>
+        </div>
+      </section>
+
+      <section class="status-panel" aria-label="Pain check">
+        <div class="status-row">
+          <label>
+            Lumbar
+            <input id="lumbarPain" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="0-10">
+          </label>
+          <label>
+            Neck
+            <input id="neckPain" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="0-10">
+          </label>
+          <label class="toggle-line">
+            <input id="radiation" type="checkbox">
+            <span>Radiating pain</span>
+          </label>
+        </div>
+        <p id="painMessage" class="pain-message">Start with the planned session if symptoms are local and 3/10 or lower.</p>
+      </section>
+
+      <nav class="day-tabs" aria-label="Training days">
+        <button type="button" data-day="monday">Mon</button>
+        <button type="button" data-day="tuesday">Tue</button>
+        <button type="button" data-day="thursday">Thu</button>
+        <button type="button" data-day="saturday">Sat</button>
+        <button type="button" data-day="fallback">Fallback</button>
+      </nav>
+
+      <section class="session-header">
+        <div>
+          <p id="sessionFocus" class="eyebrow">Strength A</p>
+          <h2 id="sessionTitle">Monday</h2>
+        </div>
+        <button id="resetDay" type="button" class="ghost-button">Reset</button>
+      </section>
+
+      <section id="exerciseList" class="exercise-list" aria-live="polite"></section>
+
+      <section class="timer-dock" aria-label="Rest timer">
+        <div>
+          <p class="eyebrow">Rest timer</p>
+          <strong id="restTime">Ready</strong>
+        </div>
+        <div class="timer-actions">
+          <button id="minusRest" type="button" aria-label="Reduce rest by 15 seconds">-15</button>
+          <button id="startPauseRest" type="button">Start</button>
+          <button id="plusRest" type="button" aria-label="Add 15 seconds">+15</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

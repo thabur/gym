@@ -1,0 +1,400 @@
+:root {
+  color-scheme: dark;
+  --bg: #121417;
+  --panel: #1b2026;
+  --panel-2: #252b32;
+  --text: #f5f2ea;
+  --muted: #b8b0a5;
+  --line: #353c45;
+  --accent: #8fcf9c;
+  --accent-2: #e5b862;
+  --danger: #e46d6d;
+  --blue: #8fb8df;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.app-shell {
+  width: min(100%, 760px);
+  margin: 0 auto;
+  padding: max(16px, env(safe-area-inset-top)) 14px max(118px, env(safe-area-inset-bottom));
+}
+
+.topbar,
+.session-header,
+.timer-dock,
+.status-panel,
+.exercise-card {
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: 28px;
+  line-height: 1.05;
+}
+
+h2 {
+  font-size: 24px;
+}
+
+h3 {
+  font-size: 19px;
+  line-height: 1.2;
+}
+
+.eyebrow {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.session-clock {
+  min-width: 92px;
+  text-align: right;
+}
+
+.session-clock span {
+  display: block;
+  font-size: 24px;
+  font-variant-numeric: tabular-nums;
+}
+
+.session-clock small {
+  color: var(--muted);
+}
+
+.status-panel {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 8px;
+}
+
+.status-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+label {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+input[type="number"] {
+  width: 100%;
+  height: 42px;
+  margin-top: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #101215;
+  color: var(--text);
+  padding: 0 12px;
+}
+
+.toggle-line {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 34px;
+}
+
+.toggle-line input {
+  width: 22px;
+  height: 22px;
+}
+
+.pain-message {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.pain-message.alert {
+  color: var(--danger);
+}
+
+.day-tabs {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin: 12px 0;
+}
+
+.day-tabs button,
+.ghost-button,
+.timer-actions button,
+.set-button {
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  color: var(--text);
+  border-radius: 8px;
+  min-height: 42px;
+}
+
+.day-tabs button.active {
+  border-color: var(--accent);
+  background: #203427;
+}
+
+.session-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px;
+  border-radius: 8px;
+}
+
+.ghost-button {
+  padding: 0 14px;
+}
+
+.exercise-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.exercise-card {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.exercise-main {
+  display: grid;
+  grid-template-columns: 104px 1fr;
+  min-height: 126px;
+}
+
+.demo-box {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #0f1114;
+  border-right: 1px solid var(--line);
+}
+
+.demo-box video {
+  display: none;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.demo-box.has-video video {
+  display: block;
+}
+
+.demo-box.has-video .demo-figure {
+  display: none;
+}
+
+.demo-figure {
+  position: relative;
+  width: 76px;
+  height: 76px;
+}
+
+.demo-figure::before,
+.demo-figure::after,
+.limb-a,
+.limb-b,
+.limb-c {
+  content: "";
+  position: absolute;
+  display: block;
+  border-radius: 999px;
+  background: var(--accent);
+  transform-origin: center;
+  animation: rep-cycle 5s ease-in-out infinite;
+}
+
+.demo-figure::before {
+  width: 18px;
+  height: 18px;
+  left: 29px;
+  top: 6px;
+  background: var(--accent-2);
+}
+
+.demo-figure::after {
+  width: 12px;
+  height: 46px;
+  left: 32px;
+  top: 25px;
+}
+
+.limb-a {
+  width: 54px;
+  height: 8px;
+  left: 11px;
+  top: 38px;
+}
+
+.limb-b {
+  width: 42px;
+  height: 8px;
+  left: 28px;
+  top: 57px;
+  background: var(--blue);
+}
+
+.limb-c {
+  width: 42px;
+  height: 8px;
+  left: 6px;
+  top: 57px;
+  background: var(--blue);
+}
+
+.demo-label {
+  position: absolute;
+  bottom: 7px;
+  left: 7px;
+  right: 7px;
+  color: var(--muted);
+  font-size: 10px;
+  text-align: center;
+}
+
+@keyframes rep-cycle {
+  0%, 100% {
+    transform: rotate(-6deg) translateX(0);
+  }
+  50% {
+    transform: rotate(14deg) translateX(7px);
+  }
+}
+
+.exercise-copy {
+  padding: 12px;
+}
+
+.meta-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 8px 0;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0 9px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.cue-list {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.set-row {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  border-top: 1px solid var(--line);
+  overflow-x: auto;
+}
+
+.set-button {
+  flex: 0 0 auto;
+  min-width: 66px;
+  padding: 0 10px;
+}
+
+.set-button.done {
+  border-color: var(--accent);
+  background: #203427;
+}
+
+.timer-dock {
+  position: fixed;
+  left: 50%;
+  bottom: 12px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: min(calc(100% - 24px), 736px);
+  padding: 12px;
+  border-radius: 8px;
+  transform: translateX(-50%);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+.timer-dock strong {
+  display: block;
+  font-size: 28px;
+  font-variant-numeric: tabular-nums;
+}
+
+.timer-actions {
+  display: grid;
+  grid-template-columns: 52px 76px 52px;
+  gap: 6px;
+}
+
+.timer-actions button {
+  min-height: 44px;
+}
+
+@media (max-width: 390px) {
+  .app-shell {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .exercise-main {
+    grid-template-columns: 92px 1fr;
+  }
+
+  .timer-actions {
+    grid-template-columns: 46px 68px 46px;
+  }
+}
