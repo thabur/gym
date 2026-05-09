@@ -2,7 +2,7 @@
 
 The phone app looks for short MP4 clips in this folder. Each clip should be about 5 seconds, vertical or square, muted, and loop-friendly.
 
-If a clip is missing, the app shows the built-in animated demo panel and form cues instead.
+All exercises in the first 4-week plan now have a clip. The app still keeps the built-in illustrated fallback in case a file fails to load on the phone.
 
 Use these exact filenames:
 
@@ -30,4 +30,3 @@ Best capture style:
 - Keep the whole body or whole machine movement visible.
 - Trim to about 5 seconds.
 - Mute audio.
-

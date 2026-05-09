@@ -1,12 +1,16 @@
+const ASSET_VERSION = "v=6";
+
 const exercises = {
   "dead-bug": {
     name: "Dead bug",
     cue: "Brace, move slow",
+    video: "./assets/videos/dead-bug.mp4",
     cues: ["Low back stays quiet", "Opposite arm and leg move", "Exhale as you reach"]
   },
   "bird-dog": {
     name: "Bird dog",
     cue: "Long spine",
+    video: "./assets/videos/bird-dog.mp4",
     cues: ["Hips stay level", "Reach long, not high", "Pause before switching"]
   },
   "leg-press": {
@@ -36,46 +40,55 @@ const exercises = {
   "pallof": {
     name: "Cable Pallof press",
     cue: "Resist rotation",
+    video: "./assets/videos/pallof-press.mp4",
     cues: ["Ribs down", "Press straight out", "Cable tries to twist you, do not let it"]
   },
   "chin-tuck": {
     name: "Chin tucks, gentle",
     cue: "Small neck glide",
+    video: "./assets/videos/chin-tuck.mp4",
     cues: ["Move gently", "Do not force range", "Stop if headache increases"]
   },
   "wall-slide": {
     name: "Wall slides or scapular retractions",
     cue: "Shoulders glide",
+    video: "./assets/videos/wall-slide.mp4",
     cues: ["Keep ribs down", "Move without shrugging", "Use pain-free range"]
   },
   "lat-pulldown": {
     name: "Neutral-grip lat pulldown",
     cue: "Pull to upper chest",
+    video: "./assets/videos/lat-pulldown.mp4",
     cues: ["Neutral grip if possible", "Shoulders down first", "No leaning far back"]
   },
   "face-pull": {
     name: "Cable face pull",
     cue: "Light and clean",
+    video: "./assets/videos/face-pull.mp4",
     cues: ["Pull toward nose/forehead", "Elbows high but relaxed", "Neck stays soft"]
   },
   "hip-abduction": {
     name: "Hip abduction machine",
     cue: "Slow outer hip",
+    video: "./assets/videos/hip-abduction.mp4",
     cues: ["Sit tall", "Control out and in", "No bouncing"]
   },
   "bike-walk": {
     name: "Easy bike or treadmill walk",
     cue: "Easy finish",
+    video: "./assets/videos/bike-walk.mp4",
     cues: ["Nose-breathing effort", "No running", "Leave fresh"]
   },
   "side-plank": {
     name: "Side plank from knees",
     cue: "Straight line",
+    video: "./assets/videos/side-plank.mp4",
     cues: ["Knees bent", "Hips forward", "Stop before shaking hard"]
   },
   "hip-thrust": {
     name: "Hip thrust / glute bridge machine",
     cue: "Glutes, not back",
+    video: "./assets/videos/hip-thrust.mp4",
     cues: ["Ribs down", "Squeeze glutes at top", "No lower-back arch"]
   },
   "cable-row": {
@@ -211,7 +224,7 @@ function render() {
     const card = document.createElement("article");
     card.className = "exercise-card";
     const videoMarkup = exercise.video
-      ? `<video autoplay muted playsinline loop controls preload="auto" src="${exercise.video}"></video>`
+      ? `<video autoplay muted playsinline loop controls preload="auto" src="${exercise.video}?${ASSET_VERSION}"></video>`
       : "";
 
     const setButtons = Array.from({ length: sets }, (_, setIndex) => {

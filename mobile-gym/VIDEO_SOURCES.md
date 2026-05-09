@@ -1,6 +1,6 @@
 # Video Sources
 
-The app uses short muted clips when a reliable, permissively licensed source is available. Missing clips fall back to the built-in animated demo panel and written form cues.
+The app uses short muted clips for every planned exercise. The machine clips use public-domain CDC footage where available. The remaining warm-up, core, cable, and posture clips are locally generated form loops made for this plan, so there is no third-party media to track for those files.
 
 ## Public-Domain CDC Clips
 
@@ -19,9 +19,9 @@ Wikimedia Commons mirrors and licensing references:
 - https://commons.wikimedia.org/wiki/File:Muscle_Strengthening_at_the_Gym_-_Row_Machine.webm
 - https://commons.wikimedia.org/wiki/File:Muscle_Strengthening_at_the_Gym_-_Leg_Curl.webm
 
-## Still Needed
+## Generated Form Loops
 
-Use real filmed clips later for:
+These are original lightweight illustrated MP4 loops generated for this app. They are meant to identify the movement and reinforce the key safety cue, not replace coaching from a clinician or trainer.
 
 - `dead-bug.mp4`
 - `bird-dog.mp4`
@@ -34,4 +34,3 @@ Use real filmed clips later for:
 - `bike-walk.mp4`
 - `side-plank.mp4`
 - `hip-thrust.mp4`
-
