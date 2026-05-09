@@ -197,18 +197,18 @@ input[type="number"] {
 }
 
 .exercise-main {
-  display: grid;
-  grid-template-columns: 104px 1fr;
-  min-height: 126px;
+  display: block;
 }
 
 .demo-box {
   position: relative;
   display: grid;
   place-items: center;
+  width: 100%;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   background: #0f1114;
-  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
 }
 
 .demo-box video {
@@ -390,11 +390,21 @@ input[type="number"] {
     padding-right: 10px;
   }
 
-  .exercise-main {
-    grid-template-columns: 92px 1fr;
-  }
-
   .timer-actions {
     grid-template-columns: 46px 68px 46px;
+  }
+}
+
+@media (min-width: 720px) {
+  .exercise-main {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 160px;
+  }
+
+  .demo-box {
+    border-right: 1px solid var(--line);
+    border-bottom: 0;
+    min-height: 160px;
   }
 }
