@@ -211,7 +211,7 @@ function render() {
     const card = document.createElement("article");
     card.className = "exercise-card";
     const videoMarkup = exercise.video
-      ? `<video muted playsinline loop preload="metadata" src="${exercise.video}"></video>`
+      ? `<video autoplay muted playsinline loop controls preload="auto" src="${exercise.video}"></video>`
       : "";
 
     const setButtons = Array.from({ length: sets }, (_, setIndex) => {
@@ -250,12 +250,14 @@ function render() {
 
     const video = card.querySelector("video");
     if (video) {
-      video.addEventListener("loadeddata", () => {
-        card.querySelector(".demo-box").classList.add("has-video");
+      const demoBox = card.querySelector(".demo-box");
+      demoBox.classList.add("has-video");
+
+      video.addEventListener("loadedmetadata", () => {
         video.play().catch(() => {});
       });
       video.addEventListener("error", () => {
-        card.querySelector(".demo-box").classList.remove("has-video");
+        demoBox.classList.remove("has-video");
       });
     }
   });
