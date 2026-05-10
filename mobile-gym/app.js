@@ -1,4 +1,4 @@
-const ASSET_VERSION = "v=9";
+const ASSET_VERSION = "v=10";
 
 const exercises = {
   "dead-bug": {
@@ -173,6 +173,14 @@ const trainingSchedule = [
 
 const sessionCutoffMinute = 21 * 60 + 30;
 
+const sezamoConfig = {
+  store: "Sezamo.ro",
+  country: "Romania",
+  city: "Bucuresti",
+  mcpEndpoint: "https://mcp.sezamo.ro/mcp/",
+  forbiddenStores: ["Rohlik.cz", "Sezamo.cz", "Rohlik Group Cehia"]
+};
+
 const foodMeals = {
   "skyr-bowl": {
     id: "skyr-bowl",
@@ -319,10 +327,103 @@ const foodSlots = [
   { start: 20 * 60 + 30, end: 22 * 60, mealId: "closing-yogurt" }
 ];
 
+const recipeRotations = [
+  {
+    id: "tagliatelle-ton",
+    slot: "lunch",
+    title: "Tagliatelle cu ton",
+    prepMinutes: 15,
+    proteinEstimate: 32,
+    calorieEstimate: 300,
+    gasRisk: "low",
+    baseIngredients: ["ton in suc propriu", "paste integrale", "sos de rosii", "baby spanac"],
+    note: "Fast lunch; add salad if hunger is high."
+  },
+  {
+    id: "pizza-pocket-pui",
+    slot: "dinner",
+    title: "Buzunar de pizza cu pui",
+    prepMinutes: 25,
+    proteinEstimate: 32,
+    calorieEstimate: 286,
+    gasRisk: "medium",
+    baseIngredients: ["carne tocata din piept de pui", "mozzarella light", "pasta de rosii", "oregano"],
+    note: "Use when cravings want pizza; keep it plated."
+  },
+  {
+    id: "vita-cartof-dulce",
+    slot: "lunch",
+    title: "Bol cu vita, cartof dulce si legume",
+    prepMinutes: 30,
+    proteinEstimate: 37,
+    calorieEstimate: 358,
+    gasRisk: "medium",
+    baseIngredients: ["vita slaba tocata", "cartof dulce", "morcov", "legume usoare"],
+    note: "Swap broccoli for zucchini or peppers if gas is high."
+  },
+  {
+    id: "pui-iaurt-mustar",
+    slot: "dinner",
+    title: "Bol cu pui, iaurt si mustar",
+    prepMinutes: 30,
+    proteinEstimate: 25,
+    calorieEstimate: 279,
+    gasRisk: "low",
+    baseIngredients: ["piept de pui", "cartofi", "iaurt 2% sau fara lactoza", "mustar", "salata"],
+    note: "Closest fit to the default plan."
+  },
+  {
+    id: "wrap-pui-cremos",
+    slot: "dinner",
+    title: "Wrap cu pui cremos",
+    prepMinutes: 30,
+    proteinEstimate: 29,
+    calorieEstimate: 311,
+    gasRisk: "medium",
+    baseIngredients: ["piept de pui", "lipii integrale", "crema de branza light", "mozzarella light"],
+    note: "Ask for garlic-free swaps if digestion is noisy."
+  },
+  {
+    id: "salata-calda-pui",
+    slot: "lunch",
+    title: "Salata calda cu pui si porumb",
+    prepMinutes: 20,
+    proteinEstimate: 21,
+    calorieEstimate: 191,
+    gasRisk: "medium",
+    baseIngredients: ["piept de pui", "porumb", "varza sau salata", "iaurt", "lime"],
+    note: "Add rice or potatoes after gym days."
+  },
+  {
+    id: "ovaz-tiramisu",
+    slot: "firstMeal",
+    title: "Terci de ovaz tiramisu",
+    prepMinutes: 10,
+    proteinEstimate: 25,
+    calorieEstimate: 304,
+    gasRisk: "low",
+    baseIngredients: ["fulgi de ovaz", "iaurt grecesc 2% sau fara lactoza", "lapte 1.5%", "cafea", "cacao"],
+    note: "Good first meal when sweet cravings are loud."
+  },
+  {
+    id: "iaurt-fructe-bol",
+    slot: "snack",
+    title: "Bol proteic cu iaurt si fructe",
+    prepMinutes: 10,
+    proteinEstimate: 23,
+    calorieEstimate: 428,
+    gasRisk: "low",
+    baseIngredients: ["iaurt grecesc", "afine", "granola", "seminte chia"],
+    note: "Use as planned snack, not as unlimited dessert."
+  }
+];
+
 const standardReplacementRules = [
   "Alege variante simple, bogate in proteine si cu zahar adaugat cat mai mic.",
   "Daca un produs lipseste, inlocuieste cu un produs similar din aceeasi categorie.",
   "Pentru lactate, prefera fara lactoza daca exista o varianta buna.",
+  "Foloseste doar catalogul Sezamo Romania pentru Bucuresti.",
+  "Nu folosi Rohlik.cz, Sezamo.cz sau produse/categorii din Cehia.",
   "Nu adauga produse gatite, meal kits sau produse din categoria Ready to Eat & Cook.",
   "Nu finaliza comanda; arata-mi cosul pentru verificare."
 ];
@@ -417,6 +518,7 @@ const state = {
   recommendedFoodMealId: "skyr-bowl",
   recommendedFoodPreset: "weekdays5",
   recommendedFoodAnchor: "meal",
+  selectedRotationId: localStorage.getItem("gym:selectedRotation") || "",
   userPickedDay: false,
   restSeconds: 0,
   restRemaining: 0,
@@ -444,6 +546,7 @@ const startPauseRest = document.querySelector("#startPauseRest");
 const painMessage = document.querySelector("#painMessage");
 const foodPresetTabs = [...document.querySelectorAll("[data-food-preset]")];
 const foodMealList = document.querySelector("#foodMealList");
+const recipeRotationList = document.querySelector("#recipeRotationList");
 const prepList = document.querySelector("#prepList");
 const presetSummary = document.querySelector("#presetSummary");
 const sezamoPrompt = document.querySelector("#sezamoPrompt");
@@ -553,6 +656,7 @@ function renderView() {
 function renderFood() {
   const preset = shoppingPresets[state.foodPreset] || shoppingPresets.weekdays5;
   localStorage.setItem("gym:foodPreset", preset.presetId);
+  localStorage.setItem("gym:selectedRotation", state.selectedRotationId);
 
   foodPresetTabs.forEach((tab) => {
     tab.classList.toggle("active", tab.dataset.foodPreset === preset.presetId);
@@ -584,10 +688,36 @@ function renderFood() {
     foodMealList.appendChild(card);
   });
 
+  renderRecipeRotations();
   prepList.innerHTML = prepItems.map((item) => `<li>${item}</li>`).join("");
   prepPanel.classList.toggle("recommended", state.recommendedFoodAnchor === "prep");
-  presetSummary.textContent = preset.summary;
+  presetSummary.textContent = `${sezamoConfig.store} / ${sezamoConfig.city} / ${preset.summary}`;
   sezamoPrompt.value = generateSezamoPrompt(preset);
+}
+
+function renderRecipeRotations() {
+  recipeRotationList.innerHTML = "";
+  recipeRotations.forEach((recipe) => {
+    const card = document.createElement("article");
+    card.className = "rotation-card";
+    card.classList.toggle("selected", recipe.id === state.selectedRotationId);
+    card.innerHTML = `
+      <div class="meal-topline">
+        <span class="meal-time">${recipe.slot}</span>
+        <span class="meal-stats">${recipe.prepMinutes} min / ${recipe.proteinEstimate}g protein</span>
+      </div>
+      <h4>${recipe.title}</h4>
+      <div class="meta-line">
+        <span class="pill">${recipe.calorieEstimate} kcal</span>
+        <span class="pill">gas ${recipe.gasRisk}</span>
+      </div>
+      <p>${recipe.note}</p>
+      <button type="button" class="rotation-button" data-rotation="${recipe.id}">
+        ${recipe.id === state.selectedRotationId ? "Selected" : "Use in cart"}
+      </button>
+    `;
+    recipeRotationList.appendChild(card);
+  });
 }
 
 function getMinuteOfDay(date) {
@@ -730,8 +860,12 @@ function openFoodRecommendation() {
 }
 
 function generateSezamoPrompt(preset) {
+  const selectedRotation = recipeRotations.find((recipe) => recipe.id === state.selectedRotationId);
   const lines = [
-    `Pregateste un cos Sezamo pentru ${preset.label}.`,
+    `Pregateste un cos pe ${sezamoConfig.store} pentru ${preset.label}.`,
+    `Zona de livrare: ${sezamoConfig.city}, ${sezamoConfig.country}.`,
+    `Daca folosesti MCP, endpointul corect este ${sezamoConfig.mcpEndpoint}.`,
+    `Nu folosi ${sezamoConfig.forbiddenStores.join(", ")}.`,
     "Obiectiv: mese simple pentru slabit, 160-180g proteina pe zi, gatit rapid.",
     "Adauga doar ingrediente de baza pentru gatit acasa.",
     "",
@@ -741,6 +875,16 @@ function generateSezamoPrompt(preset) {
   preset.ingredientQuantities.forEach(([item, quantity]) => {
     lines.push(`- ${item}: ${quantity}`);
   });
+
+  if (selectedRotation) {
+    lines.push(
+      "",
+      "Rotatie optionala din PDF-ul meu de retete:",
+      `- ${selectedRotation.title}: ${selectedRotation.prepMinutes} min, aproximativ ${selectedRotation.proteinEstimate}g proteina, ${selectedRotation.calorieEstimate} kcal.`,
+      `- Ingrediente de baza de adaugat/verificat: ${selectedRotation.baseIngredients.join(", ")}.`,
+      "- Nu inventa produse premium daca exista variante simple echivalente."
+    );
+  }
 
   lines.push("", "Reguli:");
   preset.replacementRules.forEach((rule) => {
@@ -885,6 +1029,13 @@ foodPresetTabs.forEach((tab) => {
     state.foodPreset = tab.dataset.foodPreset;
     renderFood();
   });
+});
+
+recipeRotationList.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-rotation]");
+  if (!button) return;
+  state.selectedRotationId = state.selectedRotationId === button.dataset.rotation ? "" : button.dataset.rotation;
+  renderFood();
 });
 
 showGymRecommendation.addEventListener("click", openGymRecommendation);
