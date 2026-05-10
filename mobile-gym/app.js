@@ -1,4 +1,4 @@
-const ASSET_VERSION = "v=6";
+const ASSET_VERSION = "v=9";
 
 const exercises = {
   "dead-bug": {
@@ -164,14 +164,276 @@ const sessions = {
   }
 };
 
+const trainingSchedule = [
+  { dayIndex: 1, day: "monday" },
+  { dayIndex: 2, day: "tuesday" },
+  { dayIndex: 4, day: "thursday" },
+  { dayIndex: 6, day: "saturday" }
+];
+
+const sessionCutoffMinute = 21 * 60 + 30;
+
+const foodMeals = {
+  "skyr-bowl": {
+    id: "skyr-bowl",
+    slot: "firstMeal",
+    title: "Skyr bowl",
+    prepMinutes: 5,
+    proteinEstimate: 45,
+    calorieEstimate: 520,
+    ingredients: [
+      "Skyr or Greek yogurt, 350g",
+      "Oats, 40g",
+      "Banana or berries, 1 serving",
+      "Whey, 20g if protein is short"
+    ],
+    instructions: ["Mix everything cold", "Use berries if bananas trigger cravings"],
+    gasRisk: "low"
+  },
+  "chicken-rice-bowl": {
+    id: "chicken-rice-bowl",
+    slot: "lunch",
+    title: "Chicken rice bowl",
+    prepMinutes: 10,
+    proteinEstimate: 55,
+    calorieEstimate: 650,
+    ingredients: [
+      "Cooked chicken, 180-220g",
+      "Cooked rice or potatoes, 250-350g",
+      "Salad or cooked vegetables, 2 handfuls",
+      "Olive oil or yogurt sauce, 1 small spoon"
+    ],
+    instructions: ["Reheat chicken and carb", "Add vegetables and sauce after heating"],
+    gasRisk: "low"
+  },
+  "protein-snack": {
+    id: "protein-snack",
+    slot: "snack",
+    title: "16:00 protein snack",
+    prepMinutes: 3,
+    proteinEstimate: 30,
+    calorieEstimate: 300,
+    ingredients: [
+      "Cottage cheese or skyr, 200-250g",
+      "Apple, banana, or berries",
+      "Cinnamon or cocoa"
+    ],
+    instructions: ["Eat before the craving window peaks", "Add fruit even if appetite feels low"],
+    gasRisk: "low"
+  },
+  "chicken-wrap": {
+    id: "chicken-wrap",
+    slot: "dinner",
+    title: "Chicken wrap dinner",
+    prepMinutes: 12,
+    proteinEstimate: 50,
+    calorieEstimate: 620,
+    ingredients: [
+      "Cooked chicken, 170-200g",
+      "Large wrap, 1",
+      "Salad, cucumber, tomato, or pickles",
+      "Greek yogurt sauce"
+    ],
+    instructions: ["Warm the wrap", "Fill, fold, and add extra salad on the side"],
+    gasRisk: "low"
+  },
+  "tuna-potato-bowl": {
+    id: "tuna-potato-bowl",
+    slot: "dinner",
+    title: "Tuna potato bowl",
+    prepMinutes: 10,
+    proteinEstimate: 45,
+    calorieEstimate: 570,
+    ingredients: [
+      "Tuna cans, 1-2",
+      "Boiled potatoes, 350-450g",
+      "Pickles, tomato, cucumber, or salad",
+      "Greek yogurt, mustard, lemon"
+    ],
+    instructions: ["Drain tuna", "Mix sauce separately, then fold into the bowl"],
+    gasRisk: "medium"
+  },
+  "closing-yogurt": {
+    id: "closing-yogurt",
+    slot: "closingSnack",
+    title: "21:00 closing snack",
+    prepMinutes: 2,
+    proteinEstimate: 25,
+    calorieEstimate: 240,
+    ingredients: [
+      "Skyr or cottage cheese, 200g",
+      "Berries or kiwi",
+      "Tea or sparkling water"
+    ],
+    instructions: ["Plate it before cravings start", "Finish eating away from bed"],
+    gasRisk: "low"
+  },
+  "rescue-plate": {
+    id: "rescue-plate",
+    slot: "emergency",
+    title: "Rescue plate",
+    prepMinutes: 5,
+    proteinEstimate: 35,
+    calorieEstimate: 380,
+    ingredients: [
+      "Tuna, eggs, cottage cheese, or skyr",
+      "Fruit or potatoes",
+      "Pickles, cucumber, or salad"
+    ],
+    instructions: ["Use a plate, not the package", "Eat seated and stop after this plate"],
+    gasRisk: "low"
+  }
+};
+
+const defaultMealIds = [
+  "skyr-bowl",
+  "chicken-rice-bowl",
+  "protein-snack",
+  "chicken-wrap",
+  "closing-yogurt",
+  "rescue-plate"
+];
+
+const prepItems = [
+  "Cook 1.5kg chicken with salt, pepper, garlic-free spice mix, and lemon.",
+  "Cook rice or boil potatoes for 4-5 lunches.",
+  "Boil 8-10 eggs.",
+  "Wash or portion salad, cucumbers, tomatoes, and fruit.",
+  "Put 3 snack portions at eye level in the fridge."
+];
+
+const foodSlotLabels = {
+  firstMeal: "11:00",
+  lunch: "13:00",
+  snack: "16:00",
+  dinner: "19:30",
+  closingSnack: "21:00",
+  emergency: "Rescue"
+};
+
+const foodSlots = [
+  { start: 10 * 60 + 30, end: 12 * 60 + 30, mealId: "skyr-bowl" },
+  { start: 12 * 60 + 30, end: 15 * 60 + 30, mealId: "chicken-rice-bowl" },
+  { start: 15 * 60 + 30, end: 17 * 60 + 30, mealId: "protein-snack" },
+  { start: 17 * 60 + 30, end: 20 * 60 + 30, mealId: "chicken-wrap" },
+  { start: 20 * 60 + 30, end: 22 * 60, mealId: "closing-yogurt" }
+];
+
+const standardReplacementRules = [
+  "Alege variante simple, bogate in proteine si cu zahar adaugat cat mai mic.",
+  "Daca un produs lipseste, inlocuieste cu un produs similar din aceeasi categorie.",
+  "Pentru lactate, prefera fara lactoza daca exista o varianta buna.",
+  "Nu adauga produse gatite, meal kits sau produse din categoria Ready to Eat & Cook.",
+  "Nu finaliza comanda; arata-mi cosul pentru verificare."
+];
+
+const shoppingPresets = {
+  day1: {
+    presetId: "day1",
+    label: "1 day",
+    summary: "1 easy day",
+    days: 1,
+    servings: 1,
+    ingredientQuantities: [
+      ["Skyr sau iaurt grecesc 2%", "500g"],
+      ["Fulgi de ovaz", "40-60g"],
+      ["Banane sau fructe de padure", "2 portii"],
+      ["Piept de pui", "350-450g"],
+      ["Orez sau cartofi", "100g orez uscat sau 700g cartofi"],
+      ["Salata, castraveti, rosii", "500g"],
+      ["Cottage cheese sau branza slaba", "250g"],
+      ["Lipie mare integrala", "1 bucata"],
+      ["Oua", "2 bucati"]
+    ],
+    replacementRules: standardReplacementRules
+  },
+  days3: {
+    presetId: "days3",
+    label: "3 days",
+    summary: "3 easy days",
+    days: 3,
+    servings: 3,
+    ingredientQuantities: [
+      ["Skyr sau iaurt grecesc 2%", "1.5kg"],
+      ["Fulgi de ovaz", "150-200g"],
+      ["Banane, mere, kiwi sau fructe de padure", "6-8 portii"],
+      ["Piept de pui", "1.1-1.3kg"],
+      ["Orez sau cartofi", "300g orez uscat sau 2kg cartofi"],
+      ["Salata, castraveti, rosii", "1.5kg"],
+      ["Cottage cheese sau branza slaba", "750g"],
+      ["Lipii mari integrale", "3 bucati"],
+      ["Oua", "6 bucati"],
+      ["Ton in conserva", "2 conserve"]
+    ],
+    replacementRules: standardReplacementRules
+  },
+  weekdays5: {
+    presetId: "weekdays5",
+    label: "5 weekdays",
+    summary: "5 weekdays",
+    days: 5,
+    servings: 5,
+    ingredientQuantities: [
+      ["Skyr sau iaurt grecesc 2%", "2.5kg"],
+      ["Fulgi de ovaz", "250-300g"],
+      ["Banane, mere, kiwi sau fructe de padure", "10-12 portii"],
+      ["Piept de pui", "1.8-2.0kg"],
+      ["Orez sau cartofi", "500g orez uscat sau 3kg cartofi"],
+      ["Salata, castraveti, rosii", "2.5kg"],
+      ["Cottage cheese sau branza slaba", "1kg"],
+      ["Lipii mari integrale", "5 bucati"],
+      ["Oua", "10 bucati"],
+      ["Ton in conserva", "3 conserve"],
+      ["Lamai, mustar, muraturi", "1 set mic"]
+    ],
+    replacementRules: standardReplacementRules
+  },
+  emergency: {
+    presetId: "emergency",
+    label: "Emergency restock",
+    summary: "Emergency restock",
+    days: 0,
+    servings: 0,
+    ingredientQuantities: [
+      ["Skyr sau iaurt grecesc 2%", "1kg"],
+      ["Cottage cheese sau branza slaba", "600g"],
+      ["Oua", "10 bucati"],
+      ["Ton in conserva", "4 conserve"],
+      ["Lipii mari integrale", "6 bucati"],
+      ["Cartofi", "2kg"],
+      ["Fructe usor de mancat", "6 portii"],
+      ["Legume congelate simple", "1kg"],
+      ["Castraveti, rosii, muraturi", "1 set mic"]
+    ],
+    replacementRules: standardReplacementRules
+  }
+};
+
 const state = {
+  view: localStorage.getItem("gym:view") || "gym",
   day: pickInitialDay(),
+  foodPreset: localStorage.getItem("gym:foodPreset") || "weekdays5",
+  recommendedGymDay: "monday",
+  recommendedFoodMealId: "skyr-bowl",
+  recommendedFoodPreset: "weekdays5",
+  recommendedFoodAnchor: "meal",
+  userPickedDay: false,
   restSeconds: 0,
   restRemaining: 0,
   restTimerId: null,
   sessionStart: Date.now()
 };
 
+const gymView = document.querySelector("#gymView");
+const foodView = document.querySelector("#foodView");
+const viewTabs = [...document.querySelectorAll("[data-view]")];
+const currentStamp = document.querySelector("#currentStamp");
+const gymRecommendationTitle = document.querySelector("#gymRecommendationTitle");
+const gymRecommendationBody = document.querySelector("#gymRecommendationBody");
+const foodRecommendationTitle = document.querySelector("#foodRecommendationTitle");
+const foodRecommendationBody = document.querySelector("#foodRecommendationBody");
+const showGymRecommendation = document.querySelector("#showGymRecommendation");
+const showFoodRecommendation = document.querySelector("#showFoodRecommendation");
 const list = document.querySelector("#exerciseList");
 const tabs = [...document.querySelectorAll("[data-day]")];
 const title = document.querySelector("#sessionTitle");
@@ -180,14 +442,17 @@ const elapsedTime = document.querySelector("#elapsedTime");
 const restTime = document.querySelector("#restTime");
 const startPauseRest = document.querySelector("#startPauseRest");
 const painMessage = document.querySelector("#painMessage");
+const foodPresetTabs = [...document.querySelectorAll("[data-food-preset]")];
+const foodMealList = document.querySelector("#foodMealList");
+const prepList = document.querySelector("#prepList");
+const presetSummary = document.querySelector("#presetSummary");
+const sezamoPrompt = document.querySelector("#sezamoPrompt");
+const copyPrompt = document.querySelector("#copyPrompt");
+const copyStatus = document.querySelector("#copyStatus");
+const prepPanel = document.querySelector("#prepPanel");
 
 function pickInitialDay() {
-  const day = new Date().getDay();
-  if (day === 1) return "monday";
-  if (day === 2) return "tuesday";
-  if (day === 4) return "thursday";
-  if (day === 6) return "saturday";
-  return localStorage.getItem("gym:lastDay") || "monday";
+  return getGymRecommendation(new Date()).day;
 }
 
 function keyFor(day) {
@@ -276,6 +541,234 @@ function render() {
   });
 }
 
+function renderView() {
+  localStorage.setItem("gym:view", state.view);
+  viewTabs.forEach((tab) => {
+    tab.classList.toggle("active", tab.dataset.view === state.view);
+  });
+  gymView.hidden = state.view !== "gym";
+  foodView.hidden = state.view !== "food";
+}
+
+function renderFood() {
+  const preset = shoppingPresets[state.foodPreset] || shoppingPresets.weekdays5;
+  localStorage.setItem("gym:foodPreset", preset.presetId);
+
+  foodPresetTabs.forEach((tab) => {
+    tab.classList.toggle("active", tab.dataset.foodPreset === preset.presetId);
+  });
+
+  foodMealList.innerHTML = "";
+  defaultMealIds.forEach((id) => {
+    const meal = foodMeals[id];
+    const card = document.createElement("article");
+    card.className = "meal-card";
+    card.classList.toggle("recommended", meal.id === state.recommendedFoodMealId);
+    card.innerHTML = `
+      <div class="meal-topline">
+        <span class="meal-time">${foodSlotLabels[meal.slot]}</span>
+        <span class="meal-stats">${meal.prepMinutes} min / ${meal.proteinEstimate}g protein</span>
+      </div>
+      <h4>${meal.title}</h4>
+      <div class="meta-line">
+        <span class="pill">${meal.calorieEstimate} kcal</span>
+        <span class="pill">gas ${meal.gasRisk}</span>
+      </div>
+      <ul class="meal-details">
+        ${meal.ingredients.map((ingredient) => `<li>${ingredient}</li>`).join("")}
+      </ul>
+      <ol class="meal-steps">
+        ${meal.instructions.map((step) => `<li>${step}</li>`).join("")}
+      </ol>
+    `;
+    foodMealList.appendChild(card);
+  });
+
+  prepList.innerHTML = prepItems.map((item) => `<li>${item}</li>`).join("");
+  prepPanel.classList.toggle("recommended", state.recommendedFoodAnchor === "prep");
+  presetSummary.textContent = preset.summary;
+  sezamoPrompt.value = generateSezamoPrompt(preset);
+}
+
+function getMinuteOfDay(date) {
+  return date.getHours() * 60 + date.getMinutes();
+}
+
+function getDayDistance(fromDayIndex, toDayIndex) {
+  return (toDayIndex - fromDayIndex + 7) % 7;
+}
+
+function getGymRecommendation(date) {
+  const currentDayIndex = date.getDay();
+  const minute = getMinuteOfDay(date);
+
+  for (let offset = 0; offset <= 7; offset += 1) {
+    const dayIndex = (currentDayIndex + offset) % 7;
+    const scheduled = trainingSchedule.find((item) => item.dayIndex === dayIndex);
+    if (!scheduled) continue;
+    if (offset === 0 && minute > sessionCutoffMinute) continue;
+
+    const session = sessions[scheduled.day];
+    return {
+      day: scheduled.day,
+      title: offset === 0 ? `Today: ${session.focus}` : `${session.title}: ${session.focus}`,
+      body: offset === 0 ? "Open this before the gym." : `Next gym day in ${offset} day${offset === 1 ? "" : "s"}.`,
+      daysAway: offset
+    };
+  }
+
+  return {
+    day: "monday",
+    title: "Monday: Strength A",
+    body: "Next gym day.",
+    daysAway: getDayDistance(currentDayIndex, 1)
+  };
+}
+
+function getFoodRecommendation(date) {
+  const minute = getMinuteOfDay(date);
+  const day = date.getDay();
+
+  if (day === 0 && minute < 18 * 60) {
+    return {
+      title: "Prep for weekdays",
+      body: "Use the 5-weekday cart and prep chicken, carbs, eggs, snacks.",
+      mealId: null,
+      presetId: "weekdays5",
+      anchor: "prep"
+    };
+  }
+
+  if (minute < foodSlots[0].start) {
+    return {
+      title: "First meal at 11:00",
+      body: "Skyr bowl first; keep coffee away from an empty stomach if cravings spike.",
+      mealId: "skyr-bowl",
+      presetId: "day1",
+      anchor: "meal"
+    };
+  }
+
+  const activeSlot = foodSlots.find((slot) => minute >= slot.start && minute < slot.end);
+  if (activeSlot) {
+    const meal = foodMeals[activeSlot.mealId];
+    return {
+      title: meal.title,
+      body: `${foodSlotLabels[meal.slot]} / ${meal.proteinEstimate}g protein / ${meal.prepMinutes} min.`,
+      mealId: meal.id,
+      presetId: "day1",
+      anchor: "meal"
+    };
+  }
+
+  return {
+    title: "Night guard",
+    body: "Use the rescue plate only if you are genuinely hungry; no extra fasting tomorrow.",
+    mealId: "rescue-plate",
+    presetId: "emergency",
+    anchor: "meal"
+  };
+}
+
+function formatCurrentStamp(date) {
+  return new Intl.DateTimeFormat(navigator.language || "en", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  }).format(date);
+}
+
+function syncRecommendations({ forceDay = false, redraw = true } = {}) {
+  const now = new Date();
+  const gymRecommendation = getGymRecommendation(now);
+  const foodRecommendation = getFoodRecommendation(now);
+
+  state.recommendedGymDay = gymRecommendation.day;
+  state.recommendedFoodMealId = foodRecommendation.mealId;
+  state.recommendedFoodPreset = foodRecommendation.presetId;
+  state.recommendedFoodAnchor = foodRecommendation.anchor;
+
+  currentStamp.textContent = formatCurrentStamp(now);
+  gymRecommendationTitle.textContent = gymRecommendation.title;
+  gymRecommendationBody.textContent = gymRecommendation.body;
+  foodRecommendationTitle.textContent = foodRecommendation.title;
+  foodRecommendationBody.textContent = foodRecommendation.body;
+
+  const shouldSetDay = forceDay || !state.userPickedDay;
+  const shouldRenderGym = shouldSetDay && state.day !== gymRecommendation.day;
+  if (shouldRenderGym) {
+    state.day = gymRecommendation.day;
+  }
+  if (forceDay && foodRecommendation.presetId) {
+    state.foodPreset = foodRecommendation.presetId;
+  }
+
+  if (redraw) {
+    if (shouldRenderGym) render();
+    renderFood();
+  }
+}
+
+function openGymRecommendation() {
+  state.view = "gym";
+  state.day = state.recommendedGymDay;
+  state.userPickedDay = false;
+  render();
+  renderView();
+  document.querySelector("#gymView").scrollIntoView({ block: "start" });
+}
+
+function openFoodRecommendation() {
+  state.view = "food";
+  state.foodPreset = state.recommendedFoodPreset || state.foodPreset;
+  renderFood();
+  renderView();
+  const target = state.recommendedFoodAnchor === "prep" ? prepPanel : foodMealList;
+  target.scrollIntoView({ block: "start" });
+}
+
+function generateSezamoPrompt(preset) {
+  const lines = [
+    `Pregateste un cos Sezamo pentru ${preset.label}.`,
+    "Obiectiv: mese simple pentru slabit, 160-180g proteina pe zi, gatit rapid.",
+    "Adauga doar ingrediente de baza pentru gatit acasa.",
+    "",
+    "Produse si cantitati:"
+  ];
+
+  preset.ingredientQuantities.forEach(([item, quantity]) => {
+    lines.push(`- ${item}: ${quantity}`);
+  });
+
+  lines.push("", "Reguli:");
+  preset.replacementRules.forEach((rule) => {
+    lines.push(`- ${rule}`);
+  });
+
+  return lines.join("\n");
+}
+
+async function copySezamoPrompt() {
+  const text = sezamoPrompt.value;
+  try {
+    await navigator.clipboard.writeText(text);
+    copyStatus.textContent = "Copied";
+    return;
+  } catch {
+    sezamoPrompt.focus();
+    sezamoPrompt.select();
+  }
+
+  try {
+    const copied = document.execCommand("copy");
+    copyStatus.textContent = copied ? "Copied" : "Select and copy";
+  } catch {
+    copyStatus.textContent = "Select and copy";
+  }
+}
+
 function formatTime(totalSeconds) {
   const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
   const seconds = String(totalSeconds % 60).padStart(2, "0");
@@ -338,8 +831,16 @@ function updatePainMessage() {
     : "Start with the planned session if symptoms are local and 3/10 or lower.";
 }
 
+viewTabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    state.view = tab.dataset.view;
+    renderView();
+  });
+});
+
 tabs.forEach((tab) => {
   tab.addEventListener("click", () => {
+    state.userPickedDay = true;
     state.day = tab.dataset.day;
     render();
   });
@@ -379,8 +880,34 @@ startPauseRest.addEventListener("click", toggleRest);
   document.querySelector(selector).addEventListener("change", updatePainMessage);
 });
 
+foodPresetTabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    state.foodPreset = tab.dataset.foodPreset;
+    renderFood();
+  });
+});
+
+showGymRecommendation.addEventListener("click", openGymRecommendation);
+showFoodRecommendation.addEventListener("click", openFoodRecommendation);
+copyPrompt.addEventListener("click", copySezamoPrompt);
+
+window.addEventListener("focus", () => {
+  state.userPickedDay = false;
+  syncRecommendations({ forceDay: true });
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState !== "visible") return;
+  state.userPickedDay = false;
+  syncRecommendations({ forceDay: true });
+});
+
 setInterval(updateElapsed, 1000);
+setInterval(() => syncRecommendations(), 60 * 1000);
+syncRecommendations({ forceDay: true, redraw: false });
 render();
+renderFood();
+renderView();
 updateElapsed();
 updatePainMessage();
 

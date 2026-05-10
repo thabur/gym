@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#121417">
     <title>Gym Cockpit</title>
-    <link rel="manifest" href="./manifest.webmanifest?v=6">
+    <link rel="manifest" href="./manifest.webmanifest?v=9">
     <link rel="apple-touch-icon" href="./icon.svg">
-    <link rel="stylesheet" href="./styles.css?v=6">
+    <link rel="stylesheet" href="./styles.css?v=9">
   </head>
   <body>
     <main class="app-shell">
@@ -22,55 +22,130 @@
         </div>
       </section>
 
-      <section class="status-panel" aria-label="Pain check">
-        <div class="status-row">
-          <label>
-            Lumbar
-            <input id="lumbarPain" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="0-10">
-          </label>
-          <label>
-            Neck
-            <input id="neckPain" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="0-10">
-          </label>
-          <label class="toggle-line">
-            <input id="radiation" type="checkbox">
-            <span>Radiating pain</span>
-          </label>
-        </div>
-        <p id="painMessage" class="pain-message">Start with the planned session if symptoms are local and 3/10 or lower.</p>
-      </section>
-
-      <nav class="day-tabs" aria-label="Training days">
-        <button type="button" data-day="monday">Mon</button>
-        <button type="button" data-day="tuesday">Tue</button>
-        <button type="button" data-day="thursday">Thu</button>
-        <button type="button" data-day="saturday">Sat</button>
-        <button type="button" data-day="fallback">Fallback</button>
+      <nav class="mode-tabs" aria-label="App sections">
+        <button type="button" data-view="gym">Gym</button>
+        <button type="button" data-view="food">Food</button>
       </nav>
 
-      <section class="session-header">
-        <div>
-          <p id="sessionFocus" class="eyebrow">Strength A</p>
-          <h2 id="sessionTitle">Monday</h2>
+      <section class="now-panel" aria-label="Current recommendation">
+        <p id="currentStamp" class="eyebrow">Checking now</p>
+        <div class="now-grid">
+          <button id="showGymRecommendation" type="button" class="now-card">
+            <span>Gym</span>
+            <strong id="gymRecommendationTitle">Today</strong>
+            <small id="gymRecommendationBody">Loading</small>
+          </button>
+          <button id="showFoodRecommendation" type="button" class="now-card">
+            <span>Food</span>
+            <strong id="foodRecommendationTitle">Next meal</strong>
+            <small id="foodRecommendationBody">Loading</small>
+          </button>
         </div>
-        <button id="resetDay" type="button" class="ghost-button">Reset</button>
       </section>
 
-      <section id="exerciseList" class="exercise-list" aria-live="polite"></section>
+      <section id="gymView">
+        <section class="status-panel" aria-label="Pain check">
+          <div class="status-row">
+            <label>
+              Lumbar
+              <input id="lumbarPain" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="0-10">
+            </label>
+            <label>
+              Neck
+              <input id="neckPain" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="0-10">
+            </label>
+            <label class="toggle-line">
+              <input id="radiation" type="checkbox">
+              <span>Radiating pain</span>
+            </label>
+          </div>
+          <p id="painMessage" class="pain-message">Start with the planned session if symptoms are local and 3/10 or lower.</p>
+        </section>
 
-      <section class="timer-dock" aria-label="Rest timer">
-        <div>
-          <p class="eyebrow">Rest timer</p>
-          <strong id="restTime">Ready</strong>
-        </div>
-        <div class="timer-actions">
-          <button id="minusRest" type="button" aria-label="Reduce rest by 15 seconds">-15</button>
-          <button id="startPauseRest" type="button">Start</button>
-          <button id="plusRest" type="button" aria-label="Add 15 seconds">+15</button>
-        </div>
+        <nav class="day-tabs" aria-label="Training days">
+          <button type="button" data-day="monday">Mon</button>
+          <button type="button" data-day="tuesday">Tue</button>
+          <button type="button" data-day="thursday">Thu</button>
+          <button type="button" data-day="saturday">Sat</button>
+          <button type="button" data-day="fallback">Fallback</button>
+        </nav>
+
+        <section class="session-header">
+          <div>
+            <p id="sessionFocus" class="eyebrow">Strength A</p>
+            <h2 id="sessionTitle">Monday</h2>
+          </div>
+          <button id="resetDay" type="button" class="ghost-button">Reset</button>
+        </section>
+
+        <section id="exerciseList" class="exercise-list" aria-live="polite"></section>
+
+        <section class="timer-dock" aria-label="Rest timer">
+          <div>
+            <p class="eyebrow">Rest timer</p>
+            <strong id="restTime">Ready</strong>
+          </div>
+          <div class="timer-actions">
+            <button id="minusRest" type="button" aria-label="Reduce rest by 15 seconds">-15</button>
+            <button id="startPauseRest" type="button">Start</button>
+            <button id="plusRest" type="button" aria-label="Add 15 seconds">+15</button>
+          </div>
+        </section>
+      </section>
+
+      <section id="foodView" class="food-view" hidden>
+        <section class="food-hero" aria-label="Nutrition targets">
+          <div>
+            <p class="eyebrow">4-week food block</p>
+            <h2>Easy fat-loss week</h2>
+          </div>
+          <div class="target-grid">
+            <span><strong>2,200-2,400</strong><small>kcal</small></span>
+            <span><strong>160-180g</strong><small>protein</small></span>
+            <span><strong>30 min</strong><small>weekday cook</small></span>
+          </div>
+        </section>
+
+        <nav class="food-tabs" aria-label="Shopping presets">
+          <button type="button" data-food-preset="day1">1 day</button>
+          <button type="button" data-food-preset="days3">3 days</button>
+          <button type="button" data-food-preset="weekdays5">5 weekdays</button>
+          <button type="button" data-food-preset="emergency">Emergency</button>
+        </nav>
+
+        <section class="food-columns">
+          <article class="food-panel" aria-label="Daily meals">
+            <div class="panel-heading">
+              <p class="eyebrow">Default day</p>
+              <h3>Meals</h3>
+            </div>
+            <div id="foodMealList" class="meal-list"></div>
+          </article>
+
+          <article id="prepPanel" class="food-panel" aria-label="Weekend prep">
+            <div class="panel-heading">
+              <p class="eyebrow">Under 1 hour</p>
+              <h3>Sunday prep</h3>
+            </div>
+            <ul id="prepList" class="prep-list"></ul>
+          </article>
+        </section>
+
+        <section class="food-panel sezamo-panel" aria-label="Sezamo shopping prompt">
+          <div class="panel-heading">
+            <p id="presetSummary" class="eyebrow">5 weekdays</p>
+            <h3>Sezamo prompt</h3>
+          </div>
+          <textarea id="sezamoPrompt" class="sezamo-prompt" readonly></textarea>
+          <div class="food-actions">
+            <button id="copyPrompt" type="button" class="food-action">Copy prompt</button>
+            <a class="food-action food-link" href="https://www.sezamo.ro/" target="_blank" rel="noreferrer">Open Sezamo</a>
+          </div>
+          <p id="copyStatus" class="copy-status" aria-live="polite"></p>
+        </section>
       </section>
     </main>
 
-    <script src="./app.js?v=6"></script>
+    <script src="./app.js?v=9"></script>
   </body>
 </html>
