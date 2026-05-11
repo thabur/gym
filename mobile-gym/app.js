@@ -1,4 +1,4 @@
-const ASSET_VERSION = "v=10";
+const ASSET_VERSION = "v=12";
 
 const exercises = {
   "dead-bug": {
@@ -320,11 +320,9 @@ const foodSlotLabels = {
 };
 
 const foodSlots = [
-  { start: 10 * 60 + 30, end: 12 * 60 + 30, mealId: "skyr-bowl" },
-  { start: 12 * 60 + 30, end: 15 * 60 + 30, mealId: "chicken-rice-bowl" },
-  { start: 15 * 60 + 30, end: 17 * 60 + 30, mealId: "protein-snack" },
-  { start: 17 * 60 + 30, end: 20 * 60 + 30, mealId: "chicken-wrap" },
-  { start: 20 * 60 + 30, end: 22 * 60, mealId: "closing-yogurt" }
+  { start: 10 * 60 + 30, end: 14 * 60 + 30, mealIndex: 0 },
+  { start: 15 * 60, end: 17 * 60 + 30, mealIndex: 1 },
+  { start: 18 * 60, end: 21 * 60 + 30, mealIndex: 2 }
 ];
 
 const recipeRotations = [
@@ -332,88 +330,248 @@ const recipeRotations = [
     id: "tagliatelle-ton",
     slot: "lunch",
     title: "Tagliatelle cu ton",
+    role: "fast work lunch",
     prepMinutes: 15,
     proteinEstimate: 32,
     calorieEstimate: 300,
     gasRisk: "low",
+    packable: true,
+    batchable: false,
+    prepAhead: "Boil pasta in the morning or cook it fresh in 15 minutes.",
     baseIngredients: ["ton in suc propriu", "paste integrale", "sos de rosii", "baby spanac"],
+    ingredients: [
+      "Paste integrale, 50-70g uscate",
+      "Ton in suc propriu, 1 conserva scursa",
+      "Sos de rosii simplu, 50-80g",
+      "Baby spanac, 1 mana",
+      "Lamaie, piper, oregano"
+    ],
+    sezamoIngredients: ["paste integrale", "ton in suc propriu", "sos de rosii simplu", "baby spanac", "lamaie"],
+    steps: [
+      "Fierbe pastele in apa sarata pana sunt al dente.",
+      "Incalzeste sosul de rosii intr-o tigaie mica si adauga tonul scurs.",
+      "Pune spanacul peste sos doar 30-60 secunde, cat sa se inmoaie.",
+      "Amesteca pastele cu sosul si termina cu lamaie, piper si oregano.",
+      "Pentru birou, pune langa castraveti, rosii sau salata simpla."
+    ],
+    storage: "Merge la frigider 24 ore. Pastreaza extra salata separat ca sa nu se inmoaie.",
     note: "Fast lunch; add salad if hunger is high."
   },
   {
     id: "pizza-pocket-pui",
     slot: "dinner",
     title: "Buzunar de pizza cu pui",
+    role: "craving dinner",
     prepMinutes: 25,
     proteinEstimate: 32,
     calorieEstimate: 286,
     gasRisk: "medium",
+    packable: false,
+    batchable: true,
+    prepAhead: "Formeaza 2-3 buzunare in weekend si pastreaza-le crude, acoperite, pana a doua zi.",
     baseIngredients: ["carne tocata din piept de pui", "mozzarella light", "pasta de rosii", "oregano"],
+    ingredients: [
+      "Carne tocata din piept de pui, 220-250g",
+      "Mozzarella light, 25-35g",
+      "Pasta de rosii, 1 lingura",
+      "Oregano, busuioc, sare, piper",
+      "Salata sau castraveti langa"
+    ],
+    sezamoIngredients: ["carne tocata din piept de pui", "mozzarella light", "pasta de rosii", "oregano", "salata verde"],
+    steps: [
+      "Asezoneaza carnea si aplatizeaz-o intre doua foi de hartie de copt.",
+      "Unge jumatate cu pasta de rosii si pune mozzarella deasupra.",
+      "Pliaza carnea peste umplutura si inchide marginile cu degetele.",
+      "Gateste la air fryer 14-16 minute la 200C sau la cuptor 18-22 minute.",
+      "Mananca-l din farfurie, cu salata langa, ca sa ramana o cina controlata."
+    ],
+    storage: "Cel mai bun proaspat. Gatit, tine 2 zile la frigider si se reincalzeste 6-8 minute.",
     note: "Use when cravings want pizza; keep it plated."
   },
   {
     id: "vita-cartof-dulce",
     slot: "lunch",
     title: "Bol cu vita, cartof dulce si legume",
+    role: "batch lunch",
     prepMinutes: 30,
     proteinEstimate: 37,
     calorieEstimate: 358,
     gasRisk: "medium",
+    packable: true,
+    batchable: true,
+    prepAhead: "Fa 2 portii sambata/duminica; tine carbohidratii si carnea gata portionate.",
     baseIngredients: ["vita slaba tocata", "cartof dulce", "morcov", "legume usoare"],
+    ingredients: [
+      "Vita slaba tocata, 180-220g",
+      "Cartof dulce, 250-300g",
+      "Morcov, dovlecel sau ardei, 2 maini",
+      "Ulei de masline, 1 lingurita",
+      "Sare, piper, boia dulce"
+    ],
+    sezamoIngredients: ["vita slaba tocata", "cartof dulce", "morcovi", "dovlecel", "ardei kapia"],
+    steps: [
+      "Taie cartoful dulce cuburi mici si gateste-l la air fryer sau tigaie 15-18 minute.",
+      "Rumeneste vita intr-o tigaie antiaderenta, cu sare, piper si boia.",
+      "Adauga legumele taiate subtire si gateste-le 5-7 minute, sa ramana usoare.",
+      "Imparte in caserole: cartof dulce jos, vita si legume deasupra.",
+      "Daca e zi de sala, adauga cartof sau orez suplimentar langa."
+    ],
+    storage: "Tine 3 zile la frigider. Reincalzeste complet si adauga ceva proaspat langa.",
     note: "Swap broccoli for zucchini or peppers if gas is high."
   },
   {
     id: "pui-iaurt-mustar",
     slot: "dinner",
     title: "Bol cu pui, iaurt si mustar",
+    role: "default prep bowl",
     prepMinutes: 30,
     proteinEstimate: 25,
     calorieEstimate: 279,
     gasRisk: "low",
+    packable: true,
+    batchable: true,
+    prepAhead: "Duminica: gateste puiul si cartofii; sosul il amesteci in ziua respectiva.",
     baseIngredients: ["piept de pui", "cartofi", "iaurt 2% sau fara lactoza", "mustar", "salata"],
+    ingredients: [
+      "Piept de pui, 180-220g",
+      "Cartofi, 300-400g",
+      "Iaurt grecesc 2% sau fara lactoza, 80-120g",
+      "Mustar, 1 lingurita",
+      "Salata, castraveti, rosii"
+    ],
+    sezamoIngredients: ["piept de pui", "cartofi", "iaurt grecesc 2% fara lactoza", "mustar", "salata", "castraveti", "rosii"],
+    steps: [
+      "Fierbe cartofii cuburi 15-20 minute sau gateste-i la air fryer.",
+      "Taie puiul fasii si gateste-l intr-o tigaie antiaderenta 4-5 minute pe parte.",
+      "Amesteca iaurtul cu mustar, sare, piper si putina lamaie.",
+      "Pune cartofii, puiul si legumele in bol, apoi sosul deasupra.",
+      "Pentru birou, tine sosul separat si il adaugi cand mananci."
+    ],
+    storage: "Puiul si cartofii tin 3 zile. Sosul e mai bun facut proaspat sau tinut separat.",
     note: "Closest fit to the default plan."
   },
   {
     id: "wrap-pui-cremos",
     slot: "dinner",
     title: "Wrap cu pui cremos",
+    role: "portable dinner",
     prepMinutes: 30,
     proteinEstimate: 29,
     calorieEstimate: 311,
     gasRisk: "medium",
+    packable: true,
+    batchable: true,
+    prepAhead: "Gateste puiul in avans; asambleaza wrapul in 5 minute ca sa nu se inmoaie.",
     baseIngredients: ["piept de pui", "lipii integrale", "crema de branza light", "mozzarella light"],
+    ingredients: [
+      "Piept de pui, 160-200g",
+      "Lipie integrala mare, 1",
+      "Crema de branza light, 30-40g",
+      "Mozzarella light, 20-30g",
+      "Castraveti, salata sau muraturi"
+    ],
+    sezamoIngredients: ["piept de pui", "lipii integrale", "crema de branza light", "mozzarella light", "castraveti", "salata"],
+    steps: [
+      "Gateste puiul cuburi cu sare, piper si condimente fara usturoi daca esti balonat.",
+      "Unge lipia cu crema de branza si pune puiul, mozzarella si legumele.",
+      "Ruleaza strans, apoi rumeneste 2-3 minute pe fiecare parte intr-o tigaie uscata.",
+      "Taie pe diagonala si pune in farfurie cu extra legume.",
+      "Daca il iei la birou, lasa legumele apoase separat."
+    ],
+    storage: "Puiul gatit tine 3 zile. Wrapul asamblat e ok 12-18 ore daca nu pui rosii in interior.",
     note: "Ask for garlic-free swaps if digestion is noisy."
   },
   {
     id: "salata-calda-pui",
     slot: "lunch",
     title: "Salata calda cu pui si porumb",
+    role: "light lunch",
     prepMinutes: 20,
     proteinEstimate: 21,
     calorieEstimate: 191,
     gasRisk: "medium",
+    packable: true,
+    batchable: false,
+    prepAhead: "Tine pui gatit in frigider; restul se asambleaza in cateva minute.",
     baseIngredients: ["piept de pui", "porumb", "varza sau salata", "iaurt", "lime"],
+    ingredients: [
+      "Piept de pui, 150-180g",
+      "Porumb, 80-120g",
+      "Salata verde sau varza taiata fin, 2 maini",
+      "Iaurt grecesc sau fara lactoza, 60-80g",
+      "Lime sau lamaie"
+    ],
+    sezamoIngredients: ["piept de pui", "porumb", "salata verde", "iaurt grecesc fara lactoza", "lime"],
+    steps: [
+      "Gateste puiul fasii intr-o tigaie antiaderenta.",
+      "Incalzeste porumbul 1-2 minute in aceeasi tigaie.",
+      "Amesteca iaurtul cu lime, sare si piper.",
+      "Pune salata in bol, adauga puiul cald, porumbul si sosul.",
+      "Dupa sala, mareste portia cu orez sau cartofi ca sa nu vina foamea seara."
+    ],
+    storage: "Tine componentele separat pana la masa. Salata amestecata nu e buna a doua zi.",
     note: "Add rice or potatoes after gym days."
   },
   {
     id: "ovaz-tiramisu",
     slot: "firstMeal",
     title: "Terci de ovaz tiramisu",
+    role: "sweet first meal",
     prepMinutes: 10,
     proteinEstimate: 25,
     calorieEstimate: 304,
     gasRisk: "low",
+    packable: true,
+    batchable: true,
+    prepAhead: "Fa 2 borcane seara. Nu face 5 deodata; textura scade dupa 2-3 zile.",
     baseIngredients: ["fulgi de ovaz", "iaurt grecesc 2% sau fara lactoza", "lapte 1.5%", "cafea", "cacao"],
+    ingredients: [
+      "Fulgi de ovaz, 40-50g",
+      "Iaurt grecesc 2% sau fara lactoza, 180-220g",
+      "Lapte 1.5%, 80-120ml",
+      "Cafea, 1 shot mic sau 30-50ml",
+      "Cacao si indulcitor dupa gust"
+    ],
+    sezamoIngredients: ["fulgi de ovaz", "iaurt grecesc 2% fara lactoza", "lapte 1.5%", "cafea", "cacao"],
+    steps: [
+      "Amesteca ovazul cu laptele si cafeaua intr-un borcan.",
+      "Pune deasupra iaurtul si niveleaza-l.",
+      "Presara cacao si lasa la frigider minimum 2 ore sau peste noapte.",
+      "Dimineata, mananca-l ca prima masa sau ia-l la birou.",
+      "Daca proteina e scurta, adauga o jumatate de cupa de whey."
+    ],
+    storage: "Tine 2-3 zile la frigider, inchis. Bun pentru zile cu pofta de dulce.",
     note: "Good first meal when sweet cravings are loud."
   },
   {
     id: "iaurt-fructe-bol",
     slot: "snack",
     title: "Bol proteic cu iaurt si fructe",
+    role: "16:00 snack",
     prepMinutes: 10,
     proteinEstimate: 23,
     calorieEstimate: 428,
     gasRisk: "low",
+    packable: true,
+    batchable: false,
+    prepAhead: "Portioneaza iaurtul si fructele dimineata; granola separat pana la masa.",
     baseIngredients: ["iaurt grecesc", "afine", "granola", "seminte chia"],
+    ingredients: [
+      "Iaurt grecesc sau skyr, 250-300g",
+      "Afine sau fructe de padure, 100-150g",
+      "Granola simpla, 25-35g",
+      "Seminte chia, 5-10g",
+      "Scortisoara sau cacao"
+    ],
+    sezamoIngredients: ["iaurt grecesc", "skyr", "afine", "granola simpla", "seminte chia"],
+    steps: [
+      "Pune iaurtul intr-un bol sau recipient de birou.",
+      "Adauga fructele si scortisoara.",
+      "Pastreaza granola separat pana la masa.",
+      "Mananca-l intre 15:30 si 17:00, inainte sa creasca pofta de seara.",
+      "Daca vrei mai putine calorii, redu granola si pastreaza volumul din fructe."
+    ],
+    storage: "Asamblat fara granola tine 24 ore. Granola ramane separata.",
     note: "Use as planned snack, not as unlimited dessert."
   }
 ];
@@ -510,16 +668,311 @@ const shoppingPresets = {
   }
 };
 
+const weeklyFoodPlans = {
+  0: {
+    title: "Sunday prep day",
+    note: "Cook once for the first part of the week. Three planned meals; night rescue stays optional.",
+    prepItems: [
+      "Cook chicken and potatoes for 2 pui bowls.",
+      "Make 2 tiramisu oat jars.",
+      "Portion 2 yogurt snack bowls without granola.",
+      "Wash salad, cucumbers, tomatoes, and fruit."
+    ],
+    meals: [
+      {
+        time: "12:00",
+        kind: "First meal",
+        title: "Tiramisu oats + skyr",
+        recipeId: "ovaz-tiramisu",
+        calorieEstimate: 680,
+        proteinEstimate: 55,
+        note: "Sweet enough to calm cravings without turning into dessert.",
+        addOns: ["Skyr or whey for the protein target", "Berries or banana"]
+      },
+      {
+        time: "16:00",
+        kind: "Anti-craving snack",
+        title: "Protein yogurt fruit bowl",
+        recipeId: "iaurt-fructe-bol",
+        calorieEstimate: 380,
+        proteinEstimate: 35,
+        note: "Eat it before the craving window peaks.",
+        addOns: ["Keep granola measured", "Tea, water, or coffee only after food"]
+      },
+      {
+        time: "19:30",
+        kind: "Dinner",
+        title: "Chicken, potato, yogurt-mustard bowl",
+        recipeId: "pui-iaurt-mustar",
+        calorieEstimate: 1050,
+        proteinEstimate: 80,
+        note: "Make two portions if Monday lunch is not ready.",
+        addOns: ["Extra potatoes or rice if training hunger is high", "Salad on the side"]
+      }
+    ]
+  },
+  1: {
+    title: "Monday strength day",
+    note: "Lunch and snack should be ready before work. Dinner is bigger after training.",
+    prepItems: [
+      "Pack chicken bowl and yogurt snack before leaving.",
+      "Keep dinner ingredients visible in the fridge.",
+      "If lunch is missing, cook tagliatelle with tuna in 15 minutes."
+    ],
+    meals: [
+      {
+        time: "12:00",
+        kind: "Work lunch",
+        title: "Chicken potato work bowl",
+        recipeId: "pui-iaurt-mustar",
+        calorieEstimate: 760,
+        proteinEstimate: 65,
+        note: "Sauce separate if packed.",
+        addOns: ["Use the cooked chicken and potatoes from prep", "Cucumber or tomatoes"]
+      },
+      {
+        time: "16:00",
+        kind: "Anti-craving snack",
+        title: "Protein yogurt fruit bowl",
+        recipeId: "iaurt-fructe-bol",
+        calorieEstimate: 380,
+        proteinEstimate: 35,
+        note: "This protects dinner from becoming a food order.",
+        addOns: ["Measured granola", "Fruit"]
+      },
+      {
+        time: "19:30",
+        kind: "Post-gym dinner",
+        title: "Creamy chicken wrap plate",
+        recipeId: "wrap-pui-cremos",
+        calorieEstimate: 1050,
+        proteinEstimate: 75,
+        note: "Plate it with extra vegetables and potatoes if needed.",
+        addOns: ["Extra potatoes or rice", "Pickles or salad"]
+      }
+    ]
+  },
+  2: {
+    title: "Tuesday posture day",
+    note: "Keep it portable and simple. No extra restaurant decision needed.",
+    prepItems: [
+      "Pack tuna pasta or a chicken bowl.",
+      "Put the snack at eye level.",
+      "If digestion is noisy, choose zucchini/peppers over broccoli."
+    ],
+    meals: [
+      {
+        time: "12:00",
+        kind: "Work lunch",
+        title: "Tagliatelle with tuna + salad",
+        recipeId: "tagliatelle-ton",
+        calorieEstimate: 720,
+        proteinEstimate: 60,
+        note: "Fast lunch with a protein top-up if needed.",
+        addOns: ["Skyr or cottage cheese if protein is short", "Simple salad"]
+      },
+      {
+        time: "16:00",
+        kind: "Anti-craving snack",
+        title: "Protein yogurt fruit bowl",
+        recipeId: "iaurt-fructe-bol",
+        calorieEstimate: 360,
+        proteinEstimate: 32,
+        note: "Keep the snack planned, not improvised.",
+        addOns: ["Berries", "Measured granola"]
+      },
+      {
+        time: "19:30",
+        kind: "Dinner",
+        title: "Beef, sweet potato, easy veg bowl",
+        recipeId: "vita-cartof-dulce",
+        calorieEstimate: 1050,
+        proteinEstimate: 75,
+        note: "Cook two portions if Wednesday lunch is not ready.",
+        addOns: ["Extra lean beef or yogurt sauce", "Zucchini or peppers"]
+      }
+    ]
+  },
+  3: {
+    title: "Wednesday rest day",
+    note: "No fasting compensation. Keep the same structure and use boring food.",
+    prepItems: [
+      "Check Thursday lunch before dinner.",
+      "Restock yogurt, fruit, and tuna if they are low.",
+      "Keep night rescue separate from planned meals."
+    ],
+    meals: [
+      {
+        time: "12:00",
+        kind: "First meal",
+        title: "Skyr bowl",
+        recipeId: "skyr-bowl",
+        calorieEstimate: 700,
+        proteinEstimate: 60,
+        note: "Simple cold meal, no cooking required.",
+        addOns: ["Whey if protein is short", "Berries over banana if cravings are loud"]
+      },
+      {
+        time: "16:00",
+        kind: "Anti-craving snack",
+        title: "Protein snack",
+        recipeId: "protein-snack",
+        calorieEstimate: 360,
+        proteinEstimate: 35,
+        note: "Eat before coffee if cravings are high.",
+        addOns: ["Apple or berries", "Cinnamon or cocoa"]
+      },
+      {
+        time: "19:30",
+        kind: "Dinner",
+        title: "Tuna potato bowl",
+        recipeId: "tuna-potato-bowl",
+        calorieEstimate: 1050,
+        proteinEstimate: 75,
+        note: "A low-cook dinner for the middle of the week.",
+        addOns: ["Extra potatoes for fullness", "Pickles, cucumber, or tomatoes"]
+      }
+    ]
+  },
+  4: {
+    title: "Thursday strength day",
+    note: "Lunch is steady, snack is non-negotiable, dinner is the reward structure.",
+    prepItems: [
+      "Pack lunch and snack before work.",
+      "Keep wrap or pizza-pocket ingredients ready.",
+      "Add carbs after training instead of grazing at night."
+    ],
+    meals: [
+      {
+        time: "12:00",
+        kind: "Work lunch",
+        title: "Chicken rice bowl",
+        recipeId: "chicken-rice-bowl",
+        calorieEstimate: 800,
+        proteinEstimate: 70,
+        note: "Default gym-day lunch.",
+        addOns: ["Cooked rice or potatoes", "Yogurt sauce"]
+      },
+      {
+        time: "16:00",
+        kind: "Anti-craving snack",
+        title: "Protein yogurt fruit bowl",
+        recipeId: "iaurt-fructe-bol",
+        calorieEstimate: 380,
+        proteinEstimate: 35,
+        note: "This is part of the plan, not a bonus.",
+        addOns: ["Granola measured before eating", "Fruit"]
+      },
+      {
+        time: "19:30",
+        kind: "Post-gym dinner",
+        title: "Pizza-pocket chicken plate",
+        recipeId: "pizza-pocket-pui",
+        calorieEstimate: 980,
+        proteinEstimate: 70,
+        note: "Use when the pizza craving is loud.",
+        addOns: ["Potatoes or rice on the side", "Large salad"]
+      }
+    ]
+  },
+  5: {
+    title: "Friday simple close",
+    note: "Finish the week without ordering by using pantry-friendly meals.",
+    prepItems: [
+      "Use remaining cooked chicken or tuna.",
+      "Check weekend shopping gaps.",
+      "Choose the dinner before 17:00."
+    ],
+    meals: [
+      {
+        time: "12:00",
+        kind: "Work lunch",
+        title: "Tagliatelle with tuna + protein side",
+        recipeId: "tagliatelle-ton",
+        calorieEstimate: 760,
+        proteinEstimate: 65,
+        note: "Pantry lunch that still fits the plan.",
+        addOns: ["Skyr or cottage cheese side", "Cucumber or salad"]
+      },
+      {
+        time: "16:00",
+        kind: "Anti-craving snack",
+        title: "Protein snack",
+        recipeId: "protein-snack",
+        calorieEstimate: 350,
+        proteinEstimate: 32,
+        note: "Keeps Friday dinner from drifting.",
+        addOns: ["Fruit", "Tea or sparkling water"]
+      },
+      {
+        time: "19:30",
+        kind: "Dinner",
+        title: "Chicken potato bowl",
+        recipeId: "pui-iaurt-mustar",
+        calorieEstimate: 1000,
+        proteinEstimate: 75,
+        note: "Repeat the easy thing. The win is not novelty.",
+        addOns: ["Extra potatoes if hunger is real", "Salad"]
+      }
+    ]
+  },
+  6: {
+    title: "Saturday circuit day",
+    note: "Flexible day, still planned. Cook one batch if Sunday will be busy.",
+    prepItems: [
+      "Cook beef bowl or chicken bowl if the fridge is empty.",
+      "Make one oat jar for Sunday.",
+      "Restock fruit and yogurt."
+    ],
+    meals: [
+      {
+        time: "12:00",
+        kind: "First meal",
+        title: "Tiramisu oats + skyr",
+        recipeId: "ovaz-tiramisu",
+        calorieEstimate: 680,
+        proteinEstimate: 55,
+        note: "Good first meal before or after the easy circuit.",
+        addOns: ["Whey or skyr", "Berries"]
+      },
+      {
+        time: "16:00",
+        kind: "Anti-craving snack",
+        title: "Protein yogurt fruit bowl",
+        recipeId: "iaurt-fructe-bol",
+        calorieEstimate: 380,
+        proteinEstimate: 35,
+        note: "Keep Saturday from turning into grazing.",
+        addOns: ["Measured granola", "Fruit"]
+      },
+      {
+        time: "19:30",
+        kind: "Dinner",
+        title: "Beef, sweet potato, easy veg bowl",
+        recipeId: "vita-cartof-dulce",
+        calorieEstimate: 1050,
+        proteinEstimate: 75,
+        note: "Batch-friendly dinner for the weekend.",
+        addOns: ["Extra vegetables", "Yogurt sauce if needed"]
+      }
+    ]
+  }
+};
+
 const state = {
   view: localStorage.getItem("gym:view") || "gym",
   day: pickInitialDay(),
   foodPreset: localStorage.getItem("gym:foodPreset") || "weekdays5",
+  foodDayOffset: Number(localStorage.getItem("gym:foodDayOffset") || 0),
+  selectedFoodMealIndex: Number(localStorage.getItem("gym:selectedFoodMealIndex") || 0),
   recommendedGymDay: "monday",
   recommendedFoodMealId: "skyr-bowl",
+  recommendedFoodMealIndex: 0,
   recommendedFoodPreset: "weekdays5",
   recommendedFoodAnchor: "meal",
   selectedRotationId: localStorage.getItem("gym:selectedRotation") || "",
   userPickedDay: false,
+  userPickedFoodPlan: false,
   restSeconds: 0,
   restRemaining: 0,
   restTimerId: null,
@@ -544,9 +997,19 @@ const elapsedTime = document.querySelector("#elapsedTime");
 const restTime = document.querySelector("#restTime");
 const startPauseRest = document.querySelector("#startPauseRest");
 const painMessage = document.querySelector("#painMessage");
-const foodPresetTabs = [...document.querySelectorAll("[data-food-preset]")];
+const foodCalendar = document.querySelector("#foodCalendar");
+const foodMissionPanel = document.querySelector("#foodMissionPanel");
+const foodMissionTime = document.querySelector("#foodMissionTime");
+const foodMissionTitle = document.querySelector("#foodMissionTitle");
+const foodMissionBody = document.querySelector("#foodMissionBody");
+const foodMissionActions = document.querySelector("#foodMissionActions");
+const foodDayPanel = document.querySelector("#foodDayPanel");
+const foodDayMeta = document.querySelector("#foodDayMeta");
+const foodDayTitle = document.querySelector("#foodDayTitle");
+const foodDayNote = document.querySelector("#foodDayNote");
+const foodDayTotals = document.querySelector("#foodDayTotals");
 const foodMealList = document.querySelector("#foodMealList");
-const recipeRotationList = document.querySelector("#recipeRotationList");
+const recipeDetailPanel = document.querySelector("#recipeDetailPanel");
 const prepList = document.querySelector("#prepList");
 const presetSummary = document.querySelector("#presetSummary");
 const sezamoPrompt = document.querySelector("#sezamoPrompt");
@@ -654,70 +1117,208 @@ function renderView() {
 }
 
 function renderFood() {
-  const preset = shoppingPresets[state.foodPreset] || shoppingPresets.weekdays5;
-  localStorage.setItem("gym:foodPreset", preset.presetId);
-  localStorage.setItem("gym:selectedRotation", state.selectedRotationId);
+  const today = new Date();
+  const days = getFoodCalendarDays(today);
+  state.foodDayOffset = Math.min(Math.max(state.foodDayOffset, 0), days.length - 1);
+  const plan = getFoodPlan(days[state.foodDayOffset]);
+  state.selectedFoodMealIndex = Math.min(Math.max(state.selectedFoodMealIndex, 0), plan.meals.length - 1);
 
-  foodPresetTabs.forEach((tab) => {
-    tab.classList.toggle("active", tab.dataset.foodPreset === preset.presetId);
-  });
+  localStorage.setItem("gym:foodDayOffset", String(state.foodDayOffset));
+  localStorage.setItem("gym:selectedFoodMealIndex", String(state.selectedFoodMealIndex));
+  localStorage.setItem("gym:selectedRotation", plan.meals[state.selectedFoodMealIndex].recipeId);
 
-  foodMealList.innerHTML = "";
-  defaultMealIds.forEach((id) => {
-    const meal = foodMeals[id];
-    const card = document.createElement("article");
-    card.className = "meal-card";
-    card.classList.toggle("recommended", meal.id === state.recommendedFoodMealId);
-    card.innerHTML = `
-      <div class="meal-topline">
-        <span class="meal-time">${foodSlotLabels[meal.slot]}</span>
-        <span class="meal-stats">${meal.prepMinutes} min / ${meal.proteinEstimate}g protein</span>
-      </div>
-      <h4>${meal.title}</h4>
-      <div class="meta-line">
-        <span class="pill">${meal.calorieEstimate} kcal</span>
-        <span class="pill">gas ${meal.gasRisk}</span>
-      </div>
-      <ul class="meal-details">
-        ${meal.ingredients.map((ingredient) => `<li>${ingredient}</li>`).join("")}
-      </ul>
-      <ol class="meal-steps">
-        ${meal.instructions.map((step) => `<li>${step}</li>`).join("")}
-      </ol>
-    `;
-    foodMealList.appendChild(card);
-  });
+  renderFoodCalendar(days);
+  renderFoodMission(getFoodMission(today));
+  renderDayPlan(plan);
 
-  renderRecipeRotations();
-  prepList.innerHTML = prepItems.map((item) => `<li>${item}</li>`).join("");
-  prepPanel.classList.toggle("recommended", state.recommendedFoodAnchor === "prep");
-  presetSummary.textContent = `${sezamoConfig.store} / ${sezamoConfig.city} / ${preset.summary}`;
-  sezamoPrompt.value = generateSezamoPrompt(preset);
+  prepList.innerHTML = plan.prepItems.map((item) => `<li>${item}</li>`).join("");
+  prepPanel.classList.toggle("recommended", plan.date.getDay() === 0 || plan.date.getDay() === 6);
+  presetSummary.textContent = `${sezamoConfig.store} / ${sezamoConfig.city} / ${formatPlanDate(plan.date)}`;
+  sezamoPrompt.value = generateSezamoPrompt(plan);
 }
 
-function renderRecipeRotations() {
-  recipeRotationList.innerHTML = "";
-  recipeRotations.forEach((recipe) => {
-    const card = document.createElement("article");
-    card.className = "rotation-card";
-    card.classList.toggle("selected", recipe.id === state.selectedRotationId);
-    card.innerHTML = `
-      <div class="meal-topline">
-        <span class="meal-time">${recipe.slot}</span>
-        <span class="meal-stats">${recipe.prepMinutes} min / ${recipe.proteinEstimate}g protein</span>
-      </div>
-      <h4>${recipe.title}</h4>
-      <div class="meta-line">
-        <span class="pill">${recipe.calorieEstimate} kcal</span>
-        <span class="pill">gas ${recipe.gasRisk}</span>
-      </div>
-      <p>${recipe.note}</p>
-      <button type="button" class="rotation-button" data-rotation="${recipe.id}">
-        ${recipe.id === state.selectedRotationId ? "Selected" : "Use in cart"}
+function getRecipeById(recipeId) {
+  return recipeRotations.find((recipe) => recipe.id === recipeId);
+}
+
+function getPlanRecipe(recipeId) {
+  const rotationRecipe = getRecipeById(recipeId);
+  if (rotationRecipe) return rotationRecipe;
+
+  const meal = foodMeals[recipeId];
+  if (!meal) return recipeRotations[0];
+
+  return {
+    id: meal.id,
+    slot: meal.slot,
+    title: meal.title,
+    role: meal.slot,
+    prepMinutes: meal.prepMinutes,
+    proteinEstimate: meal.proteinEstimate,
+    calorieEstimate: meal.calorieEstimate,
+    gasRisk: meal.gasRisk,
+    packable: meal.slot !== "dinner",
+    batchable: meal.slot === "lunch" || meal.slot === "dinner",
+    prepAhead: `${meal.prepMinutes} minute active. Keep it simple and plated.`,
+    ingredients: meal.ingredients,
+    sezamoIngredients: meal.ingredients,
+    steps: meal.instructions,
+    storage: "Best fresh; packed components are fine for the same day.",
+    note: meal.title
+  };
+}
+
+function getFoodCalendarDays(baseDate) {
+  return Array.from({ length: 7 }, (_, offset) => {
+    const date = new Date(baseDate);
+    date.setDate(baseDate.getDate() + offset);
+    date.setHours(12, 0, 0, 0);
+    return date;
+  });
+}
+
+function getFoodPlan(date) {
+  const template = weeklyFoodPlans[date.getDay()];
+  const gymSchedule = trainingSchedule.find((item) => item.dayIndex === date.getDay());
+  const gymLabel = gymSchedule ? sessions[gymSchedule.day].focus : "Rest day";
+  const meals = template.meals.map((meal, index) => ({
+    ...meal,
+    index,
+    recipe: getPlanRecipe(meal.recipeId)
+  }));
+  const totals = meals.reduce((sum, meal) => ({
+    calories: sum.calories + meal.calorieEstimate,
+    protein: sum.protein + meal.proteinEstimate
+  }), { calories: 0, protein: 0 });
+
+  return {
+    ...template,
+    date,
+    gymLabel,
+    meals,
+    totals
+  };
+}
+
+function getMealIngredients(meal) {
+  return [...meal.recipe.ingredients];
+}
+
+function formatPlanDate(date) {
+  return new Intl.DateTimeFormat(navigator.language || "en", {
+    weekday: "short",
+    month: "short",
+    day: "numeric"
+  }).format(date);
+}
+
+function renderFoodCalendar(days) {
+  foodCalendar.innerHTML = days.map((date, offset) => {
+    const plan = getFoodPlan(date);
+    const isActive = offset === state.foodDayOffset;
+    const label = offset === 0 ? "Today" : new Intl.DateTimeFormat(navigator.language || "en", { weekday: "short" }).format(date);
+
+    return `
+      <button type="button" class="${isActive ? "active" : ""}" data-food-day-offset="${offset}">
+        <span>${label}</span>
+        <strong>${date.getDate()}</strong>
+        <small>${plan.totals.calories} kcal / ${plan.totals.protein}g</small>
+        <em>${plan.gymLabel}</em>
       </button>
     `;
-    recipeRotationList.appendChild(card);
-  });
+  }).join("");
+}
+
+function renderFoodMission(mission) {
+  foodMissionPanel.classList.toggle("recommended", true);
+  foodMissionTime.textContent = `${formatCurrentStamp(mission.date)} / ${mission.badge}`;
+  foodMissionTitle.textContent = mission.title;
+  foodMissionBody.textContent = mission.body;
+  foodMissionActions.innerHTML = mission.actions.map((action) => {
+    const dayAttribute = Number.isInteger(action.dayOffset) ? ` data-day-offset="${action.dayOffset}"` : "";
+    const mealAttribute = Number.isInteger(action.mealIndex) ? ` data-meal-index="${action.mealIndex}"` : "";
+    const anchorAttribute = action.anchor ? ` data-anchor="${action.anchor}"` : "";
+    return `<button type="button" class="mission-action" data-mission-action="${action.kind}"${dayAttribute}${mealAttribute}${anchorAttribute}>${action.label}</button>`;
+  }).join("");
+}
+
+function renderDayPlan(plan) {
+  foodDayMeta.textContent = `${formatPlanDate(plan.date)} / ${plan.gymLabel}`;
+  foodDayTitle.textContent = plan.title;
+  foodDayNote.textContent = plan.note;
+  foodDayTotals.innerHTML = `
+    <span><strong>${plan.totals.calories}</strong><small>kcal</small></span>
+    <span><strong>${plan.totals.protein}g</strong><small>protein</small></span>
+  `;
+  foodMealList.innerHTML = plan.meals.map((meal) => renderMealCard(meal)).join("");
+  renderRecipeDetail(plan.meals[state.selectedFoodMealIndex]);
+}
+
+function renderMealCard(meal) {
+  const selected = meal.index === state.selectedFoodMealIndex;
+  const ingredients = getMealIngredients(meal).slice(0, 4);
+  return `
+    <article class="meal-card ${selected ? "selected recommended" : ""}">
+      <div class="meal-topline">
+        <span class="meal-time">${meal.time} / ${meal.kind}</span>
+        <span class="meal-stats">${meal.calorieEstimate} kcal / ${meal.proteinEstimate}g protein</span>
+      </div>
+      <h4>${meal.title}</h4>
+      <p class="panel-note">${meal.note}</p>
+      <ul class="meal-details">
+        ${ingredients.map((ingredient) => `<li>${ingredient}</li>`).join("")}
+      </ul>
+      <button type="button" class="cook-button" data-meal-index="${meal.index}">
+        ${selected ? "Cooking this" : "Cook this"}
+      </button>
+    </article>
+  `;
+}
+
+function renderRecipeDetail(meal) {
+  const recipe = meal.recipe;
+  const ingredients = getMealIngredients(meal);
+  recipeDetailPanel.innerHTML = `
+    <div class="recipe-detail-head">
+      <div>
+        <p class="eyebrow">${meal.time} / ${meal.kind}</p>
+        <h4>${meal.title}</h4>
+        <p class="panel-note">${recipe.prepAhead}</p>
+      </div>
+      <div class="recipe-total">
+        <strong>${meal.calorieEstimate}</strong>
+        <small>kcal</small>
+      </div>
+    </div>
+    <div class="meta-line">
+      <span class="pill">${recipe.prepMinutes} min</span>
+      <span class="pill">${meal.proteinEstimate}g protein</span>
+      <span class="pill">gas ${recipe.gasRisk}</span>
+    </div>
+    <div class="cook-grid">
+      <section>
+        <h5>Ingredients</h5>
+        <ul class="cook-list">
+          ${ingredients.map((ingredient) => `<li>${ingredient}</li>`).join("")}
+        </ul>
+      </section>
+      <section>
+        <h5>Recipe</h5>
+        <ol class="cook-list">
+          ${recipe.steps.map((step) => `<li>${step}</li>`).join("")}
+        </ol>
+      </section>
+    </div>
+    ${meal.addOns ? `
+      <section class="portion-notes">
+        <h5>Portion notes</h5>
+        <ul class="cook-list">
+          ${meal.addOns.map((item) => `<li>${item}</li>`).join("")}
+        </ul>
+      </section>
+    ` : ""}
+    <p class="cook-storage">${recipe.storage}</p>
+  `;
 }
 
 function getMinuteOfDay(date) {
@@ -755,48 +1356,73 @@ function getGymRecommendation(date) {
   };
 }
 
-function getFoodRecommendation(date) {
+function isWorkday(dayIndex) {
+  return dayIndex >= 1 && dayIndex <= 5;
+}
+
+function isWeekend(dayIndex) {
+  return dayIndex === 0 || dayIndex === 6;
+}
+
+function getRecommendedMealIndex(date) {
   const minute = getMinuteOfDay(date);
-  const day = date.getDay();
 
-  if (day === 0 && minute < 18 * 60) {
-    return {
-      title: "Prep for weekdays",
-      body: "Use the 5-weekday cart and prep chicken, carbs, eggs, snacks.",
-      mealId: null,
-      presetId: "weekdays5",
-      anchor: "prep"
-    };
+  for (const slot of foodSlots) {
+    if (minute < slot.end) return slot.mealIndex;
   }
 
-  if (minute < foodSlots[0].start) {
-    return {
-      title: "First meal at 11:00",
-      body: "Skyr bowl first; keep coffee away from an empty stomach if cravings spike.",
-      mealId: "skyr-bowl",
-      presetId: "day1",
-      anchor: "meal"
-    };
-  }
+  return foodSlots[foodSlots.length - 1].mealIndex;
+}
 
-  const activeSlot = foodSlots.find((slot) => minute >= slot.start && minute < slot.end);
-  if (activeSlot) {
-    const meal = foodMeals[activeSlot.mealId];
-    return {
-      title: meal.title,
-      body: `${foodSlotLabels[meal.slot]} / ${meal.proteinEstimate}g protein / ${meal.prepMinutes} min.`,
-      mealId: meal.id,
-      presetId: "day1",
-      anchor: "meal"
-    };
-  }
+function getFoodMission(date) {
+  const minute = getMinuteOfDay(date);
+  const dayOffset = minute >= 21 * 60 + 30 ? 1 : 0;
+  const missionDate = new Date(date);
+  missionDate.setDate(date.getDate() + dayOffset);
+  const plan = getFoodPlan(missionDate);
+  const mealIndex = dayOffset ? 0 : getRecommendedMealIndex(date);
+  const meal = plan.meals[mealIndex];
+  const isSnack = meal.kind.includes("Anti-craving");
+  const isWeekendCook = isWeekend(date.getDay()) && minute < 18 * 60;
+  const isNight = minute >= 21 * 60 + 30;
+  const badge = isNight ? "Tomorrow ready" : isSnack ? "Craving window" : isWeekendCook ? "Weekend plan" : "Next meal";
+  const title = isNight ? `Tomorrow: ${meal.title}` : `Next: ${meal.title}`;
+  const body = isNight
+    ? "Kitchen closes now. Tomorrow's meals are already mapped, so there is no need to over-fast or improvise."
+    : isSnack
+      ? "This is the 15:00-17:00 protection meal. Eat it before coffee, delivery browsing, or random snacks."
+      : `${plan.totals.calories} kcal and ${plan.totals.protein}g protein planned for ${formatPlanDate(plan.date)}. Open the recipe and cook only what is on this day.`;
 
   return {
-    title: "Night guard",
-    body: "Use the rescue plate only if you are genuinely hungry; no extra fasting tomorrow.",
-    mealId: "rescue-plate",
-    presetId: "emergency",
-    anchor: "meal"
+    date,
+    type: isNight ? "tomorrow-ready" : isSnack ? "craving-window" : "next-meal",
+    badge,
+    title,
+    body,
+    mealId: meal.recipeId,
+    mealIndex,
+    dayOffset,
+    presetId: "day1",
+    anchor: "recipe",
+    recipeIds: [meal.recipeId],
+    actions: [
+      { label: "Start recipe", kind: "meal", dayOffset, mealIndex, anchor: "recipe" }
+    ]
+  };
+}
+
+function getFoodRecommendation(date) {
+  const mission = getFoodMission(date);
+
+  return {
+    title: mission.title,
+    body: mission.body,
+    mealId: mission.mealId,
+    mealIndex: mission.mealIndex,
+    dayOffset: mission.dayOffset,
+    presetId: mission.presetId,
+    anchor: mission.anchor,
+    recipeIds: mission.recipeIds
   };
 }
 
@@ -817,6 +1443,7 @@ function syncRecommendations({ forceDay = false, redraw = true } = {}) {
 
   state.recommendedGymDay = gymRecommendation.day;
   state.recommendedFoodMealId = foodRecommendation.mealId;
+  state.recommendedFoodMealIndex = foodRecommendation.mealIndex;
   state.recommendedFoodPreset = foodRecommendation.presetId;
   state.recommendedFoodAnchor = foodRecommendation.anchor;
 
@@ -831,10 +1458,10 @@ function syncRecommendations({ forceDay = false, redraw = true } = {}) {
   if (shouldRenderGym) {
     state.day = gymRecommendation.day;
   }
-  if (forceDay && foodRecommendation.presetId) {
-    state.foodPreset = foodRecommendation.presetId;
+  if (!state.userPickedFoodPlan) {
+    state.foodDayOffset = foodRecommendation.dayOffset || 0;
+    state.selectedFoodMealIndex = foodRecommendation.mealIndex || 0;
   }
-
   if (redraw) {
     if (shouldRenderGym) render();
     renderFood();
@@ -852,42 +1479,87 @@ function openGymRecommendation() {
 
 function openFoodRecommendation() {
   state.view = "food";
-  state.foodPreset = state.recommendedFoodPreset || state.foodPreset;
+  state.foodDayOffset = 0;
+  state.selectedFoodMealIndex = state.recommendedFoodMealIndex || 0;
+  state.userPickedFoodPlan = false;
   renderFood();
   renderView();
-  const target = state.recommendedFoodAnchor === "prep" ? prepPanel : foodMealList;
-  target.scrollIntoView({ block: "start" });
+  scrollToFoodAnchor(state.recommendedFoodAnchor);
 }
 
-function generateSezamoPrompt(preset) {
-  const selectedRotation = recipeRotations.find((recipe) => recipe.id === state.selectedRotationId);
+function getFoodAnchorTarget(anchor) {
+  if (anchor === "prep") return prepPanel;
+  if (anchor === "recipe") return recipeDetailPanel;
+  if (anchor === "mission") return foodMissionPanel;
+  if (anchor === "sezamo") return sezamoPrompt;
+  return foodDayPanel;
+}
+
+function scrollToFoodAnchor(anchor) {
+  const target = getFoodAnchorTarget(anchor);
+  if (target) target.scrollIntoView({ block: "start" });
+}
+
+function selectRecipe(recipeId, { toggle = false, scroll = false } = {}) {
+  if (!getRecipeById(recipeId)) return;
+  state.selectedRotationId = toggle && state.selectedRotationId === recipeId ? "" : recipeId;
+  renderFood();
+  if (scroll) requestAnimationFrame(() => scrollToFoodAnchor("recipe"));
+}
+
+function handleFoodMissionAction(event) {
+  const button = event.target.closest("[data-mission-action]");
+  if (!button) return;
+
+  if (button.dataset.missionAction === "meal") {
+    state.foodDayOffset = Number(button.dataset.dayOffset || 0);
+    state.selectedFoodMealIndex = Number(button.dataset.mealIndex || 0);
+    state.userPickedFoodPlan = false;
+    renderFood();
+    requestAnimationFrame(() => scrollToFoodAnchor(button.dataset.anchor || "recipe"));
+    return;
+  }
+
+  if (button.dataset.missionAction === "recipe") {
+    selectRecipe(button.dataset.recipe, { scroll: true });
+    return;
+  }
+
+  if (button.dataset.missionAction === "preset") {
+    state.foodPreset = button.dataset.preset || state.foodPreset;
+    renderFood();
+    requestAnimationFrame(() => scrollToFoodAnchor(button.dataset.anchor || "sezamo"));
+    return;
+  }
+
+  scrollToFoodAnchor(button.dataset.anchor || "meal");
+}
+
+function generateSezamoPrompt(plan) {
   const lines = [
-    `Pregateste un cos pe ${sezamoConfig.store} pentru ${preset.label}.`,
+    `Pregateste un cos pe ${sezamoConfig.store} pentru ${formatPlanDate(plan.date)}.`,
     `Zona de livrare: ${sezamoConfig.city}, ${sezamoConfig.country}.`,
     `Daca folosesti MCP, endpointul corect este ${sezamoConfig.mcpEndpoint}.`,
     `Nu folosi ${sezamoConfig.forbiddenStores.join(", ")}.`,
-    "Obiectiv: mese simple pentru slabit, 160-180g proteina pe zi, gatit rapid.",
-    "Adauga doar ingrediente de baza pentru gatit acasa.",
+    `Obiectiv pentru zi: aproximativ ${plan.totals.calories} kcal si ${plan.totals.protein}g proteina.`,
+    "Adauga doar ingrediente de baza pentru gatit acasa, pentru mesele de mai jos.",
     "",
-    "Produse si cantitati:"
+    "Mese:"
   ];
 
-  preset.ingredientQuantities.forEach(([item, quantity]) => {
-    lines.push(`- ${item}: ${quantity}`);
+  plan.meals.forEach((meal) => {
+    lines.push(`- ${meal.time} ${meal.title}: ${meal.calorieEstimate} kcal, ${meal.proteinEstimate}g proteina.`);
   });
 
-  if (selectedRotation) {
-    lines.push(
-      "",
-      "Rotatie optionala din PDF-ul meu de retete:",
-      `- ${selectedRotation.title}: ${selectedRotation.prepMinutes} min, aproximativ ${selectedRotation.proteinEstimate}g proteina, ${selectedRotation.calorieEstimate} kcal.`,
-      `- Ingrediente de baza de adaugat/verificat: ${selectedRotation.baseIngredients.join(", ")}.`,
-      "- Nu inventa produse premium daca exista variante simple echivalente."
-    );
-  }
+  lines.push("", "Ingrediente de verificat/adaugat:");
+  plan.meals.forEach((meal) => {
+    const recipe = meal.recipe;
+    const ingredients = recipe.sezamoIngredients || recipe.ingredients;
+    lines.push(`- ${meal.title}: ${ingredients.join(", ")}.`);
+  });
 
   lines.push("", "Reguli:");
-  preset.replacementRules.forEach((rule) => {
+  standardReplacementRules.forEach((rule) => {
     lines.push(`- ${rule}`);
   });
 
@@ -1024,19 +1696,26 @@ startPauseRest.addEventListener("click", toggleRest);
   document.querySelector(selector).addEventListener("change", updatePainMessage);
 });
 
-foodPresetTabs.forEach((tab) => {
-  tab.addEventListener("click", () => {
-    state.foodPreset = tab.dataset.foodPreset;
-    renderFood();
-  });
+foodCalendar.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-food-day-offset]");
+  if (!button) return;
+  state.foodDayOffset = Number(button.dataset.foodDayOffset || 0);
+  state.selectedFoodMealIndex = 0;
+  state.userPickedFoodPlan = true;
+  renderFood();
+  requestAnimationFrame(() => scrollToFoodAnchor("meal"));
 });
 
-recipeRotationList.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-rotation]");
+foodMealList.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-meal-index]");
   if (!button) return;
-  state.selectedRotationId = state.selectedRotationId === button.dataset.rotation ? "" : button.dataset.rotation;
+  state.selectedFoodMealIndex = Number(button.dataset.mealIndex || 0);
+  state.userPickedFoodPlan = true;
   renderFood();
+  requestAnimationFrame(() => scrollToFoodAnchor("recipe"));
 });
+
+foodMissionActions.addEventListener("click", handleFoodMissionAction);
 
 showGymRecommendation.addEventListener("click", openGymRecommendation);
 showFoodRecommendation.addEventListener("click", openFoodRecommendation);
